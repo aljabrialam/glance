@@ -1,0 +1,276 @@
+<title>Glance Product Film</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one 16:9 stage that plays like a film, the HUD is the hero; transport and scene list sit under it. Single dark look by choice. */
+:root{
+  color-scheme:dark;
+  --night:#0A0E17; --ink:#141A27; --line:#2A3446; --mist:#C8D0E0; --dim:#8D98AE; --paper:#F1F3F8;
+  --hud:#A9B8FF; --amber:#FFC46B; --mint:#7BE3B0; --alert:#FF8C82;
+  --panel:rgba(9,13,22,.78);
+  --display:'Bricolage Grotesque','Arial Narrow',Arial,sans-serif;
+  --body:'IBM Plex Sans',-apple-system,'Segoe UI',Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{background:var(--night);color:var(--mist);font-family:var(--body);font-size:16px;line-height:1.45}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:24px 40px;display:flex;flex-direction:column;gap:16px}
+h1{font-family:var(--display);font-weight:700;font-size:28px;color:var(--paper);margin:0;line-height:1.1}
+.note{max-width:68ch;color:var(--dim);font-size:14px;margin:0}
+.stage{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;container-type:inline-size;overflow:hidden;border-radius:10px;background:var(--ink);border:1px solid var(--line)}
+.stage svg.scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+.sc{opacity:0;transition:opacity .6s ease,transform .8s ease;pointer-events:none}
+.sc.on{opacity:1}
+.late{opacity:0;transition:opacity .5s ease}
+.stage.is-late .late{opacity:1}
+.lens{position:absolute;inset:0;box-shadow:inset 0 0 12cqw 2cqw rgba(0,0,0,.6);border-radius:10px}
+.cap{position:absolute;left:3.2cqw;top:3cqw;font-family:var(--display);font-weight:700;font-size:max(11px,1.9cqw);color:var(--paper);text-shadow:0 1px 6px rgba(0,0,0,.8)}
+.concept{position:absolute;left:1.6cqw;bottom:1.4cqw;font-size:max(10px,1.1cqw);letter-spacing:.14em;text-transform:uppercase;color:var(--mist);background:rgba(9,13,22,.65);padding:.4cqw .8cqw;border-radius:.4cqw}
+
+/* HUD */
+.hud{position:absolute;right:3.2cqw;top:6cqw;width:34cqw;height:42cqw;padding:2.4cqw;background:var(--panel);border:1px solid rgba(169,184,255,.3);border-radius:1.6cqw;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:var(--hud);font-family:var(--display);font-weight:700}
+.hud .view{position:absolute;inset:2.4cqw;display:flex;flex-direction:column;gap:1.1cqw}
+.k{font-family:var(--body);font-weight:600;font-size:1.25cqw;letter-spacing:.14em;text-transform:uppercase;color:var(--mist)}
+.big{font-size:8cqw;line-height:.9;font-variant-numeric:tabular-nums}
+.big small{font-size:2.6cqw;margin-left:.6cqw}
+.mid{font-size:3.4cqw;line-height:1.05}
+.say{font-family:var(--body);font-weight:500;font-size:2.2cqw;line-height:1.3;color:var(--paper)}
+.sm{font-family:var(--body);font-weight:500;font-size:1.7cqw;color:var(--mist)}
+.rule{border-top:1px solid var(--line);padding-top:1.1cqw;display:flex;flex-direction:column;gap:.8cqw}
+.offer{display:flex;justify-content:space-between;align-items:baseline;gap:1cqw;padding:.9cqw 1.1cqw;border:1px solid var(--line);border-radius:.8cqw;font-size:2.1cqw;color:var(--mist);font-variant-numeric:tabular-nums;transition:border-color .4s ease,color .4s ease}
+.offer span{font-family:var(--body);font-weight:500;font-size:1.5cqw}
+.stage.is-late .offer.best{border-color:var(--mint);color:var(--mint)}
+.pair{display:flex;justify-content:space-between;gap:1cqw;font-family:var(--body);font-weight:500;font-size:1.7cqw;color:var(--mist);font-variant-numeric:tabular-nums}
+.track{height:1cqw;border-radius:1cqw;background:var(--line);overflow:hidden}
+.fill{height:100%;width:0;background:var(--mint);border-radius:1cqw}
+.ok{color:var(--mint)} .am{color:var(--amber)}
+.check{display:flex;align-items:center;gap:1cqw;font-size:2.4cqw}
+.check i{width:1.4cqw;height:1.4cqw;border-radius:50%;background:currentColor;flex:none}
+.wave{display:flex;align-items:center;gap:.5cqw;height:3cqw}
+.wave b{width:.6cqw;background:var(--hud);border-radius:.3cqw;animation:wv 1s ease-in-out infinite}
+.wave b:nth-child(1){height:30%}.wave b:nth-child(2){height:80%;animation-delay:.1s}.wave b:nth-child(3){height:55%;animation-delay:.2s}.wave b:nth-child(4){height:100%;animation-delay:.3s}.wave b:nth-child(5){height:45%;animation-delay:.4s}.wave b:nth-child(6){height:70%;animation-delay:.5s}
+@keyframes wv{50%{transform:scaleY(.35)}}
+
+/* band + phone */
+.band{position:absolute;left:4cqw;bottom:7cqw;width:24cqw;padding:1.6cqw;background:var(--panel);border:1px solid var(--line);border-radius:1.4cqw;display:flex;flex-direction:column;gap:.9cqw;font-family:var(--display);font-weight:700;color:var(--hud);font-size:2.2cqw}
+.band svg{width:9cqw;height:auto}
+.phone{position:absolute;left:31cqw;top:7cqw;width:20cqw;height:38cqw;padding:2.4cqw 1.8cqw;background:var(--paper);color:var(--ink);border:.7cqw solid #05070C;border-radius:3cqw;box-shadow:0 2cqw 5cqw rgba(0,0,0,.55);display:flex;flex-direction:column;gap:1.1cqw;font-family:var(--body);transform:translateY(8cqw)}
+.stage.is-late .phone.on{transform:none}
+.phone .pk{font-size:1.1cqw;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#566076}
+.phone .pa{font-family:var(--display);font-weight:700;font-size:4.2cqw;line-height:1}
+.phone .pr{font-size:1.45cqw;padding-top:1cqw;border-top:1px solid #C5CCDA}
+.phone .pr strong{display:block;font-size:1.6cqw}
+.phone .pb{margin-top:auto;background:#2343E0;color:#fff;border-radius:1cqw;padding:1.1cqw;text-align:center;font-weight:600;font-size:1.6cqw}
+
+/* cards */
+.card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.8cqw;background:radial-gradient(ellipse at 50% 40%,rgba(20,26,39,.82),rgba(6,9,15,.97));text-align:center;padding:4cqw}
+.mark{font-family:var(--display);font-weight:700;font-size:10cqw;line-height:.9;color:var(--paper)}
+.tag{font-size:2.4cqw;color:var(--hud);font-weight:500}
+.subt{font-size:1.6cqw;color:var(--mist)}
+.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2cqw;width:100%;text-align:left}
+.col{border-top:.3cqw solid var(--hud);padding-top:1.2cqw;display:flex;flex-direction:column;gap:.7cqw}
+.col h3{margin:0;font-family:var(--display);font-weight:700;font-size:2.6cqw;color:var(--paper);line-height:1.05}
+.col p{margin:0;font-size:1.55cqw;color:var(--mist);line-height:1.35}
+.col .k{color:var(--hud)}
+.title2{font-family:var(--display);font-weight:700;font-size:4cqw;color:var(--paper);line-height:1}
+
+/* transport */
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.bar button{font:inherit;font-weight:600;color:var(--night);background:var(--hud);border:0;border-radius:6px;padding:9px 16px;min-height:40px;cursor:pointer}
+.bar button.ghost{background:transparent;color:var(--mist);border:1px solid var(--line)}
+.bar input{flex:1 1 220px;min-width:0;accent-color:var(--hud)}
+.bar output{font-variant-numeric:tabular-nums;color:var(--dim);min-width:92px;text-align:right}
+button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.scenes{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px}
+.scenes button{font:inherit;text-align:left;color:var(--mist);background:transparent;border:1px solid var(--line);border-radius:6px;padding:8px 10px;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.scenes button span{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
+.scenes button[aria-current="true"]{border-color:var(--hud);color:var(--hud)}
+@media (prefers-reduced-motion:reduce){.sc,.late,.phone,.wave b{transition:none;animation:none}}
+</style>
+
+<div class="wrap">
+  <h1>Glance on Meta Display</h1>
+
+  <div class="stage" id="stage" aria-label="Animated product concept, 55 seconds">
+    <svg class="scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B3550"/><stop offset="1" stop-color="#131928"/></linearGradient>
+        <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE2B0" stop-opacity=".55"/><stop offset="1" stop-color="#FFE2B0" stop-opacity="0"/></linearGradient>
+      </defs>
+      <rect x="0" y="0" width="1600" height="900" fill="url(#wall)"/>
+      <path d="M380 0 L860 0 L1010 600 L230 600 Z" fill="url(#glow)"/>
+      <!-- upper shelf -->
+      <rect x="0" y="600" width="1600" height="22" fill="#4A556E"/>
+      <rect x="0" y="622" width="1600" height="10" fill="#0C111B"/>
+      <!-- boxes left -->
+      <rect x="70" y="420" width="150" height="180" rx="6" fill="#39445C"/>
+      <rect x="92" y="446" width="106" height="60" rx="4" fill="#55617C"/>
+      <rect x="236" y="470" width="120" height="130" rx="6" fill="#2F3A52"/>
+      <!-- headphones on a stand -->
+      <rect x="612" y="330" width="16" height="262" fill="#59647E"/>
+      <ellipse cx="620" cy="596" rx="92" ry="12" fill="#59647E"/>
+      <path d="M512 452 A108 108 0 0 1 728 452" fill="none" stroke="#E3E8F2" stroke-width="24" stroke-linecap="round"/>
+      <rect x="482" y="440" width="62" height="118" rx="26" fill="#1B2130" stroke="#E3E8F2" stroke-width="5"/>
+      <rect x="696" y="440" width="62" height="118" rx="26" fill="#1B2130" stroke="#E3E8F2" stroke-width="5"/>
+      <!-- shelf price tag -->
+      <rect x="548" y="634" width="144" height="56" rx="6" fill="#F1F3F8"/>
+      <text x="620" y="672" text-anchor="middle" font-family="Bricolage Grotesque, Arial" font-weight="700" font-size="34" fill="#141A27">$149.00</text>
+      <!-- right-hand shelf items, mostly behind the HUD -->
+      <rect x="880" y="450" width="130" height="150" rx="6" fill="#39445C"/>
+      <rect x="1030" y="400" width="170" height="200" rx="6" fill="#2F3A52"/>
+      <!-- lower shelf -->
+      <rect x="0" y="860" width="1600" height="40" fill="#3B455C"/>
+      <rect x="120" y="720" width="200" height="140" rx="6" fill="#2F3A52"/>
+      <rect x="360" y="750" width="150" height="110" rx="6" fill="#39445C"/>
+      <rect x="760" y="730" width="220" height="130" rx="6" fill="#2F3A52"/>
+
+      <!-- detection brackets -->
+      <g class="sc" data-on="see find" fill="none" stroke="#A9B8FF" stroke-width="4">
+        <path d="M452 350 V320 H482 M758 320 H788 V350 M788 548 V578 H758 M482 578 H452 V548"/>
+        <text x="452" y="304" stroke="none" fill="#A9B8FF" font-family="Bricolage Grotesque, Arial" font-weight="700" font-size="26">SONY WH-1000XM5</text>
+      </g>
+      <g class="sc" data-on="find quote">
+        <rect x="536" y="626" width="168" height="72" rx="10" fill="none" stroke="#FFC46B" stroke-width="4" stroke-dasharray="10 8"/>
+        <text x="620" y="734" text-anchor="middle" font-family="Bricolage Grotesque, Arial" font-weight="700" font-size="24" fill="#FFC46B">SHELF PRICE</text>
+      </g>
+    </svg>
+
+    <div class="lens sc" data-on="see find quote confirm paid"></div>
+    <div class="cap sc" data-on="see find quote confirm paid" id="cap"></div>
+
+    <div class="hud sc" data-on="see find quote confirm paid">
+      <div class="view sc" data-on="see">
+        <div class="k">Listening</div>
+        <div class="wave"><b></b><b></b><b></b><b></b><b></b><b></b></div>
+        <div class="say">"Find me the best price for these, under 150."</div>
+        <div class="rule late">
+          <div class="k">Understood</div>
+          <div class="mid">Sony WH-1000XM5</div>
+          <div class="sm">Limit $150 per purchase</div>
+        </div>
+      </div>
+      <div class="view sc" data-on="find">
+        <div class="k">Searching merchants</div>
+        <div class="offer best">$129 <span>Audiohub · Black</span></div>
+        <div class="offer">$139 <span>SoundCart · Silver</span></div>
+        <div class="offer">$149 <span>This shelf</span></div>
+        <div class="rule late">
+          <div class="check ok"><i></i>$20 less than the shelf</div>
+          <div class="sm">Getting the full price with shipping and tax</div>
+        </div>
+      </div>
+      <div class="view sc" data-on="quote">
+        <div class="k">Quote · Audiohub</div>
+        <div class="big">$134</div>
+        <div class="pair"><span>Item 129 · Shipping 5 · Tax 5</span></div>
+        <div class="rule">
+          <div class="track"><div class="fill" id="bfill"></div></div>
+          <div class="pair"><span>Your limit</span><span>$150</span></div>
+          <div class="check ok late"><i></i>$16 under your limit</div>
+        </div>
+      </div>
+      <div class="view sc" data-on="confirm">
+        <div class="k">Confirm</div>
+        <div class="mid">Buy for $134?</div>
+        <div class="sm">Pinch to send it to your phone</div>
+        <div class="rule late">
+          <div class="check am"><i></i>Waiting for you</div>
+          <div class="sm">Approve the charge on your phone. The agent never sees your card.</div>
+        </div>
+      </div>
+      <div class="view sc" data-on="paid">
+        <div class="k">Paid from your USDC vault</div>
+        <div class="big ok">$134</div>
+        <div class="pair"><span>Order 12345</span><span>Arrives Friday</span></div>
+        <div class="rule">
+          <div class="k">Vault balance</div>
+          <div class="mid"><span id="vault">250.00</span> USDC</div>
+          <div class="sm late">Your wallet, your stablecoins, a real card payment.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band sc" data-on="confirm">
+      <svg viewBox="0 0 180 90" fill="none" stroke="#A9B8FF" stroke-width="6" stroke-linecap="round" aria-hidden="true"><rect x="10" y="30" width="160" height="30" rx="15"/><circle cx="60" cy="45" r="5" fill="#A9B8FF"/><circle cx="90" cy="45" r="5" fill="#A9B8FF"/><circle cx="120" cy="45" r="5" fill="#A9B8FF"/></svg>
+      Neural Band · pinch
+    </div>
+    <div class="phone sc" data-on="confirm">
+      <div class="pk">Hosted approval page</div>
+      <div class="pa">$134.00</div>
+      <div class="pr"><strong>Sony WH-1000XM5</strong>Audiohub · Standard shipping</div>
+      <div class="pr"><strong>Card •••• 7797</strong>Backed by your USDC vault</div>
+      <div class="pb">Approve</div>
+    </div>
+
+    <div class="card sc" data-on="title">
+      <div class="mark">Glance</div>
+      <div class="tag">Your agent shops. You approve. Your stablecoins pay.</div>
+      <div class="subt">A second screen for the Glance mobile app</div>
+    </div>
+    <div class="card sc" data-on="how">
+      <div class="title2">How it works</div>
+      <div class="cols">
+        <div class="col"><span class="k">The brain</span><h3>Glance mobile app</h3><p>Understands the request and enforces your spending limit before any checkout.</p></div>
+        <div class="col"><span class="k">The purchase</span><h3>Reap Agentic API</h3><p>Finds the product, prices the order and checks out. You approve every charge.</p></div>
+        <div class="col"><span class="k">The money</span><h3>Kwal USDC vault</h3><p>Stablecoins in a wallet you own back the card payment at a real merchant.</p></div>
+      </div>
+      <div class="subt">The glasses show the same flow at a glance. The phone does the work.</div>
+    </div>
+    <div class="card sc" data-on="end">
+      <div class="mark">Glance</div>
+      <div class="tag">From stablecoins to the checkout, in one look.</div>
+      <div class="subt">Reap × 65labs Agentic Buildathon</div>
+    </div>
+
+    <div class="concept">Concept · glasses view simulated</div>
+  </div>
+
+  <div class="bar">
+    <button id="play">Pause</button>
+    <button id="restart" class="ghost">Restart</button>
+    <input id="seek" type="range" min="0" max="55" step="0.1" value="0" aria-label="Position in film">
+    <output id="time">0:00 / 0:55</output>
+  </div>
+  <div class="scenes" id="scenes"></div>
+  <p class="note">The glasses view is a concept animation. The purchase itself runs in the Glance mobile app against the Reap sandbox, with test USDC in a Kwal vault. Product, merchants and prices are sample data.</p>
+</div>
+
+<script>
+(function(){
+var SC=[
+ {id:'title',at:0,name:'Title',cap:''},
+ {id:'see',at:5,name:'See it, say it',cap:'Look at it. Ask for it.'},
+ {id:'find',at:12,name:'Find the price',cap:'The agent searches merchants'},
+ {id:'quote',at:19,name:'Quote vs limit',cap:'Real total, checked against your limit'},
+ {id:'confirm',at:27,name:'Confirm',cap:'You approve on your phone'},
+ {id:'paid',at:35,name:'Paid',cap:'Paid from stablecoins'},
+ {id:'how',at:42,name:'How it works',cap:''},
+ {id:'end',at:50,name:'End card',cap:''}
+],DUR=55;
+var stage=document.getElementById('stage'),seek=document.getElementById('seek'),out=document.getElementById('time'),
+    playB=document.getElementById('play'),cap=document.getElementById('cap'),list=document.getElementById('scenes'),
+    bfill=document.getElementById('bfill'),vault=document.getElementById('vault');
+var els=[].slice.call(stage.querySelectorAll('[data-on]')).map(function(e){return [e,e.getAttribute('data-on').split(' ')]});
+var t=0,playing=false,last=0,cur=-1;
+function fmt(s){s=Math.floor(s);return Math.floor(s/60)+':'+('0'+s%60).slice(-2)}
+function clamp(x){return Math.max(0,Math.min(1,x))}
+list.innerHTML=SC.map(function(s,i){return '<button data-i="'+i+'">'+s.name+'<span>'+fmt(s.at)+'</span></button>'}).join('');
+var btns=[].slice.call(list.children);
+function show(){
+  var i=0;for(var j=0;j<SC.length;j++)if(t>=SC[j].at)i=j;
+  var s=SC[i],end=i<SC.length-1?SC[i+1].at:DUR,loc=t-s.at;
+  if(i!==cur){cur=i;els.forEach(function(p){p[0].classList.toggle('on',p[1].indexOf(s.id)>-1)});cap.textContent=s.cap;btns.forEach(function(b,k){b.setAttribute('aria-current',k===i)})}
+  stage.classList.toggle('is-late',loc/(end-s.at)>.45);
+  bfill.style.width=(s.id==='quote'?clamp(loc/2.5)*89.3:89.3)+'%';
+  vault.textContent=(250-134*(s.id==='paid'?clamp((loc-1)/2.5):0)).toFixed(2);
+  seek.value=t;out.textContent=fmt(t)+' / '+fmt(DUR);
+}
+function setPlay(p){playing=p;playB.textContent=p?'Pause':(t>=DUR?'Replay':'Play');if(p){last=performance.now();requestAnimationFrame(tick)}}
+function tick(now){if(!playing)return;t+=(now-last)/1000;last=now;if(t>=DUR){t=DUR;show();setPlay(false);return}show();requestAnimationFrame(tick)}
+playB.addEventListener('click',function(){if(!playing&&t>=DUR)t=0;setPlay(!playing)});
+document.getElementById('restart').addEventListener('click',function(){t=0;show();setPlay(true)});
+seek.addEventListener('input',function(){t=+seek.value;show();if(!playing)playB.textContent=t>=DUR?'Replay':'Play'});
+list.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;t=SC[+b.dataset.i].at+.01;show();if(!playing)playB.textContent='Play'});
+show();
+var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+setPlay(!reduce);
+})();
+</script>

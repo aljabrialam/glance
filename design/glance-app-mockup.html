@@ -1,0 +1,273 @@
+<title>Glance App Mockup</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: step rail on the left, the phone in the middle, the API calls behind each screen on the right. Stacks to one column on a phone. */
+:root{
+  --bg:#F3F5F8; --surface:#FFFFFF; --ink:#101828; --muted:#566076; --line:#D7DDE8;
+  --accent:#2343E0; --accent-ink:#FFFFFF; --accent-soft:#E6EAFD;
+  --ok:#0E7A4B; --ok-soft:#DDF3E8; --warn:#8A5200; --warn-soft:#FBEBCF; --stop:#B3261E; --stop-soft:#FBE2E0;
+  --bezel:#0C1220; --code-bg:#0F172A; --code-fg:#D7E0F5; --hosted:#EEF0F3;
+  --display:'Bricolage Grotesque','Arial Narrow',Arial,sans-serif;
+  --body:'IBM Plex Sans',-apple-system,'Segoe UI',Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0D121C; --surface:#161D2B; --ink:#EDF1F8; --muted:#9AA6BC; --line:#2A3446;
+  --accent:#8EA2FF; --accent-ink:#0B1020; --accent-soft:#1E2850;
+  --ok:#5FD39B; --ok-soft:#12331F; --warn:#F2B85C; --warn-soft:#3A2B10; --stop:#FF8C82; --stop-soft:#3B1715;
+  --bezel:#000000; --code-bg:#0A0F1A; --code-fg:#D7E0F5; --hosted:#1E2533; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0D121C; --surface:#161D2B; --ink:#EDF1F8; --muted:#9AA6BC; --line:#2A3446;
+  --accent:#8EA2FF; --accent-ink:#0B1020; --accent-soft:#1E2850;
+  --ok:#5FD39B; --ok-soft:#12331F; --warn:#F2B85C; --warn-soft:#3A2B10; --stop:#FF8C82; --stop-soft:#3B1715;
+  --bezel:#000000; --code-bg:#0A0F1A; --code-fg:#D7E0F5; --hosted:#1E2533; color-scheme:dark }
+
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45}
+*{box-sizing:border-box}
+.wrap{max-width:1160px;margin:0 auto;padding-inline:16px;padding-block:24px 48px;display:flex;flex-direction:column;gap:20px}
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+h1{font-family:var(--display);font-weight:700;font-size:34px;line-height:1;margin:0;letter-spacing:-.01em}
+.lede{margin:6px 0 0;color:var(--muted);max-width:60ch}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:var(--warn-soft);color:var(--warn)}
+.layout{display:grid;grid-template-columns:190px 340px minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:980px){.layout{grid-template-columns:minmax(0,1fr)}}
+
+/* rail */
+.rail{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.rail button{width:100%;font:inherit;text-align:left;color:var(--muted);background:transparent;border:1px solid transparent;border-radius:8px;padding:9px 12px;cursor:pointer;display:flex;gap:10px;align-items:baseline}
+.rail button b{font-family:var(--mono);font-weight:500;font-size:12px;color:var(--muted)}
+.rail button:hover{border-color:var(--line)}
+.rail button[aria-current="true"]{background:var(--surface);border-color:var(--line);color:var(--ink);font-weight:600}
+.rail button[aria-current="true"] b{color:var(--accent)}
+.rail .sep{height:1px;background:var(--line);margin:6px 0}
+@media (max-width:980px){.rail{flex-direction:row;flex-wrap:wrap}.rail li{flex:0 0 auto}.rail .sep{display:none}.rail button{border-color:var(--line)}}
+
+/* device */
+.device{width:100%;max-width:340px;margin-inline:auto;background:var(--bezel);border-radius:40px;padding:10px;box-shadow:0 18px 40px rgba(12,18,32,.22)}
+.screen{background:var(--bg);border-radius:31px;height:660px;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.sbar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px 4px;font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.view{flex:1;min-height:0;overflow-y:auto;padding:10px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.foot{padding:10px 16px 16px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);background:var(--surface)}
+.h{font-family:var(--display);font-weight:700;font-size:22px;line-height:1.1;margin:0;text-wrap:balance}
+.sub{color:var(--muted);font-size:14px;margin:0}
+.k{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.back{align-self:flex-start;font:inherit;font-size:14px;color:var(--accent);background:none;border:0;padding:4px 0;cursor:pointer}
+.btn{font:inherit;font-weight:600;border:0;border-radius:12px;padding:13px 16px;min-height:46px;cursor:pointer;background:var(--accent);color:var(--accent-ink);width:100%}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,input:focus-visible,textarea:focus-visible,label:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+
+.vault{background:var(--accent);color:var(--accent-ink);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:4px}
+.vault .k{color:inherit;opacity:.8}
+.vault .amt{font-family:var(--display);font-weight:700;font-size:34px;line-height:1;font-variant-numeric:tabular-nums}
+.vault .amt small{font-size:15px;font-weight:600;margin-left:4px}
+.vault .meta{font-size:13px;opacity:.85}
+.rowc{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.rowc strong{display:block;font-variant-numeric:tabular-nums}
+.rowc span{font-size:13px;color:var(--muted)}
+.link{font:inherit;font-size:14px;font-weight:600;color:var(--accent);background:none;border:0;cursor:pointer;padding:6px 0}
+.empty{border:1px dashed var(--line);border-radius:14px;padding:16px;color:var(--muted);font-size:14px}
+.pill{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--ok-soft);color:var(--ok);white-space:nowrap}
+.pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.stop{background:var(--stop-soft);color:var(--stop)}
+
+textarea{font:inherit;width:100%;min-height:110px;resize:none;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--surface);color:var(--ink)}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.steps li{display:flex;gap:10px;align-items:center;color:var(--muted)}
+.steps li i{width:16px;height:16px;border-radius:50%;border:2px solid var(--line);flex:none}
+.steps li.done{color:var(--ink)} .steps li.done i{background:var(--ok);border-color:var(--ok)}
+.steps li.now i{border-color:var(--accent);border-top-color:transparent;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.opt{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer}
+.opt input{margin:3px 0 0;accent-color:var(--accent);flex:none}
+.opt .body{flex:1;min-width:0}
+.opt .nm{font-weight:600;font-size:14px;line-height:1.3}
+.opt .mt{font-size:13px;color:var(--muted)}
+.opt .pr{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+
+.lines{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px 14px}
+.lines div{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;font-variant-numeric:tabular-nums}
+.lines div:last-child{border-bottom:0;font-weight:600;font-size:16px}
+.meter{display:flex;flex-direction:column;gap:6px}
+.track{height:10px;border-radius:999px;background:var(--line);overflow:hidden}
+.fill{height:100%;border-radius:999px;background:var(--ok);transition:width .3s ease}
+.fill.over{background:var(--stop)}
+.mrow{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.note{font-size:13px;color:var(--muted);margin:0}
+.alert{background:var(--stop-soft);color:var(--stop);border-radius:12px;padding:10px 12px;font-size:14px;font-weight:500}
+.toast{background:var(--warn-soft);color:var(--warn);border-radius:12px;padding:10px 12px;font-size:14px;font-weight:500}
+
+/* hosted approval page: deliberately plain, it is not our UI */
+.hosted{background:var(--hosted);flex:1;min-height:0;display:flex;flex-direction:column}
+.url{display:flex;align-items:center;gap:8px;margin:8px 12px 0;padding:8px 12px;border-radius:10px;background:var(--surface);border:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.hosted .view{gap:14px}
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.sheet .amt{font-family:var(--display);font-weight:700;font-size:32px;line-height:1;font-variant-numeric:tabular-nums}
+
+.done-mark{width:64px;height:64px;border-radius:50%;background:var(--ok-soft);display:grid;place-items:center;align-self:center;margin-top:8px}
+.done-mark svg{width:30px;height:30px}
+.center{text-align:center}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.bigval{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+
+/* spec */
+.spec{display:flex;flex-direction:column;gap:14px;min-width:0}
+.spec h2{font-family:var(--display);font-weight:700;font-size:22px;margin:0;line-height:1.15}
+.spec p{margin:0;max-width:62ch}
+.spec h3{font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:6px 0 0}
+pre{margin:0;background:var(--code-bg);color:var(--code-fg);border-radius:10px;padding:12px 14px;font-family:var(--mono);font-size:13px;line-height:1.55;overflow-x:auto}
+.spec ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;max-width:62ch}
+.reset{align-self:flex-start;font:inherit;font-size:14px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.steps li.now i{animation:none}.fill{transition:none}}
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>Glance</h1>
+      <p class="lede">Clickable mockup of the mobile app. Tap through the phone, or jump with the step list. The right side shows what your backend calls on each screen.</p>
+    </div>
+    <span class="chip">Sandbox · sample data</span>
+  </div>
+
+  <div class="layout">
+    <ol class="rail" id="rail" aria-label="Screens"></ol>
+    <div class="device"><div class="screen" id="screen" aria-live="polite"></div></div>
+    <aside class="spec" id="spec"></aside>
+  </div>
+</div>
+
+<script>
+(function(){
+var P=[
+  {n:'Sony WH-1000XM5 Wireless Headphones',v:'Black',m:'Audiohub',p:129,tag:'Best price'},
+  {n:'Sony WH-1000XM5 Wireless Headphones',v:'Silver',m:'SoundCart',p:139,tag:''},
+  {n:'Sony WH-1000XM4 Wireless Headphones',v:'Black',m:'Audiohub',p:109,tag:'Older model'}
+];
+var SHIP={std:{n:'Standard',p:5,eta:'arrives Friday'},exp:{n:'Express',p:13,eta:'arrives Wednesday'}};
+var TAX=5, START=250;
+var S={scr:'home',limit:150,ship:'std',vault:START,pick:0,orders:[],busy:0,toast:'',last:null};
+var SCREENS=[['home','Home'],['ask','Ask'],['results','Results'],['quote','Quote'],['approve','Approve'],['paid','Paid'],['limit','Spending limit']];
+function total(){return P[S.pick].p+SHIP[S.ship].p+TAX}
+function m(n){return '$'+n.toFixed(2)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+var SPEC={
+ home:{t:'Home: vault, card and limit',see:'The user sees how much USDC is in their vault, which card it backs, and the limit the agent must respect.',
+  calls:'# Kwal: vault and card state (read only)\npython3 scripts/register.py status\n\n# Reap: the stored card for this user\nGET /agentic/enrollments?ownerType=…&ownerId=…\n→ status ACTIVE, paymentMethod.last4',
+  notes:['Do enrollment once during setup, not in the demo path.','Only an ACTIVE enrollment can be charged. Read it before every checkout.']},
+ ask:{t:'Ask: one sentence in',see:'The user types or speaks a request. The agent turns it into a search query and a price ceiling.',
+  calls:'# Your backend, no Reap call yet\nPOST /api/intent\n{ "text": "Buy Sony WH-1000XM5 headphones, under $150" }\n→ { "query": "Sony WH-1000XM5 headphones",\n    "maxPrice": 150 }',
+  notes:['Use the LLM for parsing only. It never sees card details.','Keep the three progress lines: they make the agent feel alive in the video.']},
+ results:{t:'Results: what the agent found',see:'A short list from merchant catalogs, with the agent\'s pick preselected.',
+  calls:'POST /agentic/products/search\n{ "query": "Sony WH-1000XM5 headphones",\n  "context": { "country": "US", "currency": "USD" },\n  "filters": { "price": { "max": "150" },\n               "availability": "AVAILABLE_ONLY" } }\n\nPOST /agentic/products/details\n{ "productIds": ["<product-id>"] }\n→ defaultVariant.id',
+  notes:['Check your item against the supported merchant sheet first.','If the user accepts the default variant you can skip the variant call.']},
+ quote:{t:'Quote: price against the limit',see:'The merchant\'s real total with shipping and tax, measured against the user\'s limit. Over the limit, the agent stops.',
+  calls:'POST /agentic/quotes            # Idempotency-Key required\n{ "items": [{ "variantId": "<variant-id>", "quantity": 1 }],\n  "email": "<user-email>" }\n→ amountBreakdown.finalAmount, shippingOptions, expiresAt\n\nPOST /agentic/quotes/:id/shipping-option\n{ "shippingOptionId": "<option-id>" }\n\n# Your rule\nif finalAmount > user.limit: block checkout',
+  notes:['Mandates are not live yet, so the limit check is your code.','Quotes expire. Create the checkout before expiresAt.','Try it: pick the Silver pair with Express shipping to see the block.']},
+ approve:{t:'Approve: the hosted page',see:'The user approves the charge on a page hosted by Reap, opened in a WebView. Your app cannot replace this step.',
+  calls:'POST /agentic/checkouts          # Idempotency-Key required\nX-Simulate-Checkout: COMPLETED   # sandbox only\n{ "quoteId": "<quote-id>",\n  "enrollmentId": "<enrollment-id>",\n  "presentation": { "type": "REDIRECT",\n                    "returnUrl": "https://<your-backend>/done" } }\n→ status REQUIRES_ACTION, nextAction.url',
+  notes:['Open nextAction.url in the WebView. The return URL must be HTTPS.','This screen is a stand-in. The real page comes from Reap.']},
+ paid:{t:'Paid: order confirmed',see:'The order reference, the amount charged, and the vault balance after the spend.',
+  calls:'GET /agentic/checkouts/:id       # poll until terminal\n→ status COMPLETED, orderId, finalAmount\n\n# Kwal: vault balance after the card spend\npython3 scripts/register.py status',
+  notes:['Show finalAmount, not the quote total. It is the amount actually charged.','Sandbox: the checkout is simulated and nothing ships.']},
+ limit:{t:'Spending limit',see:'One number the user controls. The agent never checks out above it.',
+  calls:'# Your backend\nPUT /api/users/:id/limit\n{ "perPurchase": 150, "currency": "USD" }',
+  notes:['This is the permission story for the judges: the user sets it, the agent obeys it.','Drag it below the quote total, then open Quote to see the agent stop.']}
+};
+
+function sbar(){return '<div class="sbar"><span>4:42</span><span>Sandbox</span></div>'}
+
+var V={
+ home:function(){
+  var orders=S.orders.length?S.orders.map(function(o){return '<div class="rowc"><div><strong>'+esc(o.name)+'</strong><span>Order '+o.ref+' · '+esc(o.merchant)+'</span></div><strong>'+m(o.amt)+'</strong></div>'}).join('')
+   :'<div class="empty">No orders yet. Ask Glance to buy something and it shows up here.</div>';
+  return sbar()+'<div class="view">'+
+   '<div class="vault"><span class="k">USDC vault</span><span class="amt">'+S.vault.toFixed(2)+'<small>USDC</small></span><span class="meta">Test funds on Ink Sepolia · backs card •••• 7797</span></div>'+
+   '<div class="rowc"><div><strong>'+m(S.limit)+' per purchase</strong><span>Glance stops above this</span></div><button class="link" data-go="limit">Change</button></div>'+
+   '<span class="k">Orders</span>'+orders+
+   '</div><div class="foot"><button class="btn" data-go="ask">Ask Glance to buy something</button></div>';
+ },
+ ask:function(){
+  var lines=['Reading your request','Searching merchants','Checking live prices'];
+  var prog=S.busy?'<ul class="steps">'+lines.map(function(l,i){var c=i<S.busy-1?'done':(i===S.busy-1?'now':'');return '<li class="'+c+'"><i></i>'+l+'</li>'}).join('')+'</ul>':'<p class="note">Sample request. The mockup returns the same sample results for any text.</p>';
+  return sbar()+'<div class="view"><button class="back" data-go="home">← Home</button><h2 class="h">What should I buy?</h2>'+
+   '<textarea id="ask" aria-label="Your request"'+(S.busy?' disabled':'')+'>Buy Sony WH-1000XM5 headphones, under '+m(S.limit).replace('.00','')+'</textarea>'+prog+
+   '</div><div class="foot"><button class="btn" data-act="send"'+(S.busy?' disabled':'')+'>'+(S.busy?'Working…':'Find it')+'</button></div>';
+ },
+ results:function(){
+  return sbar()+'<div class="view"><button class="back" data-go="ask">← Ask</button><h2 class="h">3 matches found</h2><p class="sub">Sample catalog results. Prices before shipping and tax.</p>'+
+   P.map(function(p,i){return '<label class="opt"><input type="radio" name="pick" id="pick'+i+'" value="'+i+'"'+(S.pick===i?' checked':'')+'><span class="body"><span class="nm">'+esc(p.n)+'</span><br><span class="mt">'+p.v+' · '+p.m+'</span>'+(p.tag?'<br><span class="pill'+(i?' warn':'')+'">'+p.tag+'</span>':'')+'</span><span class="pr">'+m(p.p)+'</span></label>'}).join('')+
+   '</div><div class="foot"><button class="btn" data-go="quote">Get the full price</button></div>';
+ },
+ quote:function(){
+  var p=P[S.pick],t=total(),over=t>S.limit,pct=Math.min(100,t/S.limit*100);
+  return sbar()+'<div class="view"><button class="back" data-go="results">← Results</button>'+
+   (S.toast?'<div class="toast">'+S.toast+'</div>':'')+
+   '<h2 class="h">'+esc(p.n)+'</h2><p class="sub">'+p.v+' · '+p.m+'</p>'+
+   (over?'<div class="alert">'+m(t-S.limit)+' over your limit. Glance will not check out. Pick cheaper shipping or raise the limit.</div>':'')+
+   '<span class="k">Shipping</span>'+
+   ['std','exp'].map(function(k){var s=SHIP[k];return '<label class="opt"><input type="radio" name="ship" id="ship-'+k+'" value="'+k+'"'+(S.ship===k?' checked':'')+'><span class="body"><span class="nm">'+s.n+'</span><br><span class="mt">'+s.eta+'</span></span><span class="pr">'+m(s.p)+'</span></label>'}).join('')+
+   '<div class="lines"><div><span>Item</span><span>'+m(p.p)+'</span></div><div><span>Shipping</span><span>'+m(SHIP[S.ship].p)+'</span></div><div><span>Tax</span><span>'+m(TAX)+'</span></div><div><span>Total</span><span>'+m(t)+'</span></div></div>'+
+   '<div class="meter"><div class="track"><div class="fill'+(over?' over':'')+'" style="width:'+pct+'%"></div></div><div class="mrow"><span>'+(over?m(t-S.limit)+' over your limit':m(S.limit-t)+' under your limit')+'</span><span>Limit '+m(S.limit)+'</span></div></div>'+
+   (over?'':'<p class="note">Price held by the merchant for <span id="hold">10:00</span>.</p>')+
+   '</div><div class="foot"><button class="btn" data-go="approve"'+(over?' disabled':'')+'>Review and pay '+m(t)+'</button>'+(over?'<button class="btn ghost" data-go="limit">Change limit</button>':'')+'</div>';
+ },
+ approve:function(){
+  var p=P[S.pick],t=total();
+  return sbar()+'<div class="hosted"><div class="url">🔒 hosted approval page · opened in a WebView</div><div class="view">'+
+   '<div class="sheet"><span class="k">Approve this payment</span><span class="amt">'+m(t)+'</span><span>'+esc(p.n)+' ('+p.v+')</span><span class="sub">'+p.m+' · '+SHIP[S.ship].n+' shipping</span></div>'+
+   '<div class="rowc"><div><strong>Card •••• 7797</strong><span>Backed by your USDC vault</span></div><span class="pill">Active</span></div>'+
+   '<p class="note">Stand-in for the page Reap hosts. Card details never reach the app or the agent.</p>'+
+   '</div></div><div class="foot"><button class="btn" data-act="approve">Approve '+m(t)+'</button><button class="btn ghost" data-act="decline">Decline</button></div>';
+ },
+ paid:function(){
+  var o=S.last||{name:P[S.pick].n,merchant:P[S.pick].m,amt:total(),ref:12345,ship:SHIP[S.ship],after:S.vault-total(),preview:1};
+  return sbar()+'<div class="view"><div class="done-mark"><svg viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>'+
+   '<h2 class="h center">Paid '+m(o.amt)+'</h2><p class="sub center">From your USDC vault</p>'+
+   '<div class="lines"><div><span>Order</span><span>'+o.ref+'</span></div><div><span>Merchant</span><span>'+esc(o.merchant)+'</span></div><div><span>Delivery</span><span>'+o.ship.n+', '+o.ship.eta+'</span></div><div><span>Vault balance</span><span>'+o.after.toFixed(2)+' USDC</span></div></div>'+
+   '<p class="note">'+(o.preview?'Preview of this screen. Approve a payment to record the order. ':'')+'Sandbox: the checkout is simulated and nothing ships.</p>'+
+   '</div><div class="foot"><button class="btn" data-go="home">Done</button></div>';
+ },
+ limit:function(){
+  return sbar()+'<div class="view"><button class="back" data-go="home">← Home</button><h2 class="h">Spending limit</h2><p class="sub">The most Glance can spend on one purchase, shipping and tax included.</p>'+
+   '<div class="bigval center" id="limval">'+m(S.limit).replace('.00','')+'</div>'+
+   '<input type="range" id="limit" min="50" max="300" step="10" value="'+S.limit+'" aria-label="Per-purchase limit in dollars">'+
+   '<div class="mrow"><span>$50</span><span>$300</span></div>'+
+   '<p class="note">Above this, Glance stops and tells you why. You always approve the charge yourself as well.</p>'+
+   '</div><div class="foot"><button class="btn" data-go="home">Save limit</button></div>';
+ }
+};
+
+var screen=document.getElementById('screen'),rail=document.getElementById('rail'),spec=document.getElementById('spec');
+var holdT=null,hold=600;
+function render(){
+  screen.innerHTML=V[S.scr]();
+  rail.innerHTML=SCREENS.map(function(s,i){return (s[0]==='limit'?'<li class="sep" aria-hidden="true"></li>':'')+'<li><button data-go="'+s[0]+'" aria-current="'+(S.scr===s[0])+'"><b>'+(i<6?'0'+(i+1):'··')+'</b>'+s[1]+'</button></li>'}).join('');
+  var d=SPEC[S.scr];
+  spec.innerHTML='<h2>'+d.t+'</h2><p>'+d.see+'</p><h3>Behind this screen</h3><pre>'+esc(d.calls)+'</pre><h3>Build notes</h3><ul>'+d.notes.map(function(n){return '<li>'+n+'</li>'}).join('')+'</ul><button class="reset" data-act="reset">Reset the demo</button>';
+  clearInterval(holdT);
+  if(S.scr==='quote'&&document.getElementById('hold')){hold=600;holdT=setInterval(function(){var e=document.getElementById('hold');if(!e){clearInterval(holdT);return}hold=Math.max(0,hold-1);e.textContent=Math.floor(hold/60)+':'+('0'+hold%60).slice(-2)},1000)}
+}
+function go(s){if(s!=='quote')S.toast='';S.busy=0;S.scr=s;render()}
+
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-go],[data-act]');if(!b||b.disabled)return;
+  if(b.dataset.go){go(b.dataset.go);return}
+  var a=b.dataset.act;
+  if(a==='send'){S.busy=1;render();var n=1,iv=setInterval(function(){if(S.scr!=='ask'){clearInterval(iv);return}n++;if(n>3){clearInterval(iv);go('results')}else{S.busy=n;render()}},700)}
+  if(a==='approve'){var p=P[S.pick],t=total();S.vault=Math.round((S.vault-t)*100)/100;S.last={name:p.n,merchant:p.m,amt:t,ref:12345+S.orders.length,ship:SHIP[S.ship],after:S.vault};S.orders.unshift(S.last);go('paid')}
+  if(a==='decline'){S.scr='quote';S.toast='Payment declined. Nothing was charged.';render()}
+  if(a==='reset'){S={scr:'home',limit:150,ship:'std',vault:START,pick:0,orders:[],busy:0,toast:'',last:null};render()}
+});
+document.addEventListener('change',function(e){
+  if(e.target.name==='pick'){S.pick=+e.target.value}
+  if(e.target.name==='ship'){S.ship=e.target.value;S.toast='';render();var f=document.getElementById('ship-'+S.ship);if(f)f.focus()}
+});
+document.addEventListener('input',function(e){
+  if(e.target.id==='limit'){S.limit=+e.target.value;document.getElementById('limval').textContent='$'+S.limit}
+});
+render();
+})();
+</script>
