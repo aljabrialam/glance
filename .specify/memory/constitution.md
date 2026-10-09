@@ -1,50 +1,77 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Glance Constitution
+
+Glance is a mobile app where an AI agent finds a product, prices it, checks it
+against the user's spending limit, and pays with a card backed by the user's
+stablecoin vault.
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. User Approves Every Charge
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+No payment completes without the user approving it on the payment provider's
+own approval page. The app MUST NOT recreate, bypass, or automate that page.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. The Agent Never Touches Card Details
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+Card numbers MUST NOT reach the app, the server, logs, or any AI model.
+Merchant checkouts MUST NOT be scraped.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. Limit Before Checkout
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+A purchase whose total exceeds the user's per-purchase limit MUST be blocked
+before any checkout is opened, and the user MUST be told by how much it is
+over.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### IV. Sandbox Only
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+Test funds, test cards, simulated checkout only. API keys and test card
+details are secrets: they MUST NOT appear in the repository, logs, or the
+frontend.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### V. Honest Amounts
+
+Money is held as whole cents; floating point MUST NOT be used for money. The
+user is always shown the amount actually charged, never an estimate.
+
+### VI. Specification First
+
+No code without an approved spec. Every acceptance criterion has an ID of the
+form AC-<spec>-<nn> and exactly one level tag: [api], [ui], or [e2e]. Every
+acceptance criterion has at least one test whose name contains its ID, or a
+noted manual check.
+
+### VII. Test Pyramid
+
+Limit and amount rules are pure functions with unit tests, written before any
+screen uses them. Prefer [api] wherever a rule can be proven without a screen.
+One [e2e] journey only: the happy path purchase.
+
+### VIII. Living Documentation
+
+The spec is amended before behaviour changes.
+
+### IX. Stop and Report
+
+After implementing a spec, the agent stops and reports what was built, test
+results, and traceability status.
+
+## Out of Scope
+
+Real purchases, production keys, recurring purchases, travel booking,
+restricted categories, glasses hardware, multi-user accounts.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other practices. Three gates per spec:
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+- **G1** approves the specification.
+- **G2** approves the plan.
+- **G3** approves the release.
+
+Gates are approved by a named human, recorded in `specs/<spec>/gates/`, and
+never approved retroactively. Amendments to this constitution are made before
+dependent behaviour changes and bump the version per semantic versioning
+(MAJOR: principle removal/redefinition; MINOR: new or materially expanded
+principle; PATCH: clarification).
+
+**Version**: 1.0.0 | **Ratified**: 2026-10-09 | **Last Amended**: 2026-10-09
