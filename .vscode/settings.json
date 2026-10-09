@@ -1,4 +1,4 @@
 {
-    "devin.defaultModel": "claude-5-fable-medium",
+    "devin.defaultModel": "claude-fable-5-1-medium",
     "devin.defaultThoughtLevel": "low"
 }
