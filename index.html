@@ -1,0 +1,37 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Glance — your agent shops, you approve, your stablecoins pay</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{color-scheme:light dark;--bg:#F3F5F8;--surface:#fff;--ink:#101828;--muted:#566076;--line:#D7DDE8;--accent:#2343E0;--accent-ink:#fff;--warn:#8A5200;--warn-soft:#FBEBCF;--ok:#0E7A4B;--ok-soft:#DDF3E8}
+@media (prefers-color-scheme:dark){:root{--bg:#0D121C;--surface:#161D2B;--ink:#EDF1F8;--muted:#9AA6BC;--line:#2A3446;--accent:#8EA2FF;--accent-ink:#0B1020;--warn:#F2B85C;--warn-soft:#3A2B10;--ok:#5FD39B;--ok-soft:#12331F}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',-apple-system,'Segoe UI',Arial,sans-serif;font-size:16px;line-height:1.5}
+.wrap{max-width:860px;margin:0 auto;padding:48px 20px 64px;display:flex;flex-direction:column;gap:22px}
+h1{font-family:'Bricolage Grotesque',Arial,sans-serif;font-weight:700;font-size:48px;line-height:1;margin:0;letter-spacing:-.01em}
+.tag{font-size:20px;color:var(--muted);margin:0;max-width:40ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:var(--ok-soft);color:var(--ok)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+a.card{display:flex;flex-direction:column;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;color:inherit;text-decoration:none}
+a.card:hover{border-color:var(--accent)}
+a.card b{font-family:'Bricolage Grotesque',Arial,sans-serif;font-size:18px}
+a.card span{font-size:14px;color:var(--muted)}
+a.card.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}a.card.primary span{color:inherit;opacity:.85}
+p.note{font-size:13px;color:var(--muted);margin:0}
+</style>
+<div class="wrap">
+  <h1>Glance</h1>
+  <p class="tag">Your agent shops. You approve. Your stablecoins pay. An AI agent finds a product, prices it in full, checks it against your spending limit, and pays through Reap with a card backed by your Kwal USDC vault — never without you approving the charge.</p>
+  <div class="chips"><span class="chip">Reap Agentic API · sandbox · SG/SGD</span><span class="chip">Kwal USDC vault</span><span class="chip">Phone camera · built</span><span class="chip warn">Meta Display · concept</span></div>
+  <div class="grid">
+    <a class="card primary" href="design/glance-app-mockup.html?play=1"><b>▶ Interactive demo</b><span>Auto-plays the 62 s pitch: phone, Meta Display lens, live backend trace. Then click around.</span></a>
+    <a class="card" href="https://www.youtube.com/watch?v=vuL4Ya3pzrs"><b>Demo video</b><span>62 seconds, narrated, on YouTube.</span></a>
+    <a class="card" href="design/glance-product-film.html"><b>Product film</b><span>The glasses concept: look at it, ask for it, approve on your phone.</span></a>
+    <a class="card" href="design/glance-app-mockup.html?scr=quote&limit=8000"><b>The guardrail</b><span>Jump straight to an over-limit quote: blocked before any checkout.</span></a>
+    <a class="card" href="https://github.com/aljabrialam/glance#readme"><b>README &amp; source</b><span>Architecture, what is real vs simulated, spec traceability, how to run.</span></a>
+    <a class="card" href="design/pitch-voiceover.md"><b>Pitch script</b><span>Cue-by-cue beats and voice-over.</span></a>
+  </div>
+  <p class="note">Reap × 65labs Agentic Buildathon, Singapore, 9 October 2026. Sandbox only — nothing is really bought or shipped. The demo pages are self-contained with sample data in the shapes the Reap sandbox returns; the mobile app in the repo runs the flow for real.</p>
+</div>
