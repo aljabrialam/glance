@@ -221,7 +221,9 @@ glance/
 │                            backend trace, 62 s auto-pitch), product film, pitch video + voice-over
 │                            script, headless recorder (record-pitch.mjs), App Store screenshot
 │                            kit (glance-app-store.html → export-store-shots.sh → app-store/*.png)
-├── docs/                 context, scope lock, run sheet
+├── docs/                 technical docs (architecture, infrastructure, persistence, API,
+│                            security, mobile release, delivery plan) + hackathon context,
+│                            scope lock, run sheet — index in docs/README.md
 └── .specify/             constitution and Spec Kit templates
 ```
 
@@ -262,6 +264,20 @@ npm run demo:ios
 ```
 
 Secrets (`REAP_API_KEY`, test card, LLM key, Kwal credentials) live only in `.env` and the Kwal credentials file outside the repo — see `.gitignore`.
+
+## Documentation
+
+How Glance is built technically and how it gets from this build to a public beta — index in [`docs/README.md`](docs/README.md).
+
+| | |
+|---|---|
+| [`docs/architecture.md`](docs/architecture.md) | Guarantees, system context, trust boundaries, the purchase flow, intent and money handling, hackathon → beta gaps, decisions |
+| [`docs/infrastructure.md`](docs/infrastructure.md) | AWS ECS Fargate (Singapore) + Supabase: environments, network, secrets, observability, CI/CD, Terraform, Reap/Kwal cutover, cost, DR, runbooks |
+| [`docs/persistence.md`](docs/persistence.md) | Postgres schema, row-level security, checkout state and reconciliation, migrations, retention |
+| [`docs/api.md`](docs/api.md) | Backend API reference: every endpoint, errors, the Reap calls behind each, planned additions, idempotency |
+| [`docs/security.md`](docs/security.md) | Threat model, card-data boundary and PCI posture, auth, secrets, webhook and WebView hardening, the model boundary, compliance checklist |
+| [`docs/mobile-release.md`](docs/mobile-release.md) | Expo Router structure, EAS build profiles and channels, release pipeline, store readiness, quality gates |
+| [`docs/delivery-plan.md`](docs/delivery-plan.md) | Four phases to public beta with exit gates, timeline, service levels, risks, open questions for Reap and Kwal |
 
 ## Further reading
 
