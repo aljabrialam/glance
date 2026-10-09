@@ -315,7 +315,7 @@ async def home():
     return {
         "vaultBalance": bal.get("balance"),
         "vaultSource": bal.get("source"),
-        "vaultAddress": bal.get("address"),
+        "vaultAddress": bal.get("vaultAddress"),
         "cardLast4": bal.get("cardLast4") or os.environ.get("CARD_LAST4", "4242"),
         "limit": STATE["limit"],
         "orders": STATE["orders"][:20],
