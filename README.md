@@ -17,7 +17,7 @@ Built in one evening at the **Reap × 65labs Agentic Buildathon**, Singapore, 9 
 
 [![Watch the demo](https://img.youtube.com/vi/vuL4Ya3pzrs/maxresdefault.jpg)](https://www.youtube.com/watch?v=vuL4Ya3pzrs)
 
-> **Demo video (62 s, narrated):** [youtu.be/vuL4Ya3pzrs](https://youtu.be/vuL4Ya3pzrs) · silent master: [`design/glance-pitch-62s.mp4`](design/glance-pitch-62s.mp4) · **Interactive demo:** [`design/glance-app-mockup.html`](design/glance-app-mockup.html) (press **Play the pitch**; phone + Meta Display lens + live backend trace) · **Product film:** [`design/glance-product-film.html`](design/glance-product-film.html) · **Voice-over script:** [`design/pitch-voiceover.md`](design/pitch-voiceover.md)
+> **Live:** [aljabrialam.github.io/glance](https://aljabrialam.github.io/glance/) · **Interactive demo:** [open it](https://aljabrialam.github.io/glance/design/glance-app-mockup.html?play=1) (auto-plays the pitch; phone + Meta Display lens + live backend trace) · **Demo video (62 s, narrated):** [youtu.be/vuL4Ya3pzrs](https://youtu.be/vuL4Ya3pzrs) · **Product film:** [open it](https://aljabrialam.github.io/glance/design/glance-product-film.html) · **Voice-over script:** [`design/pitch-voiceover.md`](design/pitch-voiceover.md) · silent master: [`design/glance-pitch-62s.mp4`](design/glance-pitch-62s.mp4)
 
 ---
 
@@ -26,6 +26,7 @@ Built in one evening at the **Reap × 65labs Agentic Buildathon**, Singapore, 9 
 | | |
 |---|---|
 | **Demo video** | [youtube.com/watch?v=vuL4Ya3pzrs](https://www.youtube.com/watch?v=vuL4Ya3pzrs) |
+| **Live demo** | [aljabrialam.github.io/glance](https://aljabrialam.github.io/glance/) — interactive pitch, product film, guardrail scenario |
 | **What it is** | A mobile app where an agent shops for you inside a hard spending limit, and you approve every charge |
 | **Problem solved** | "Agentic commerce" demos either let the model spend freely or make the human re-do the whole checkout. Glance keeps the agent useful (search, price, compare, pre-check) and the human in control (one approval tap on the provider's page), with a limit that is enforced in code before any checkout exists |
 | **Two ways to see** | **Meta Display glasses** — hands-free, concept film; same agent, same rules, approval still on the phone. **Phone camera** — built: a photo goes to a vision model that identifies the product |
