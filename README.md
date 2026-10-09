@@ -15,7 +15,7 @@ Glance turns one glance, one photo, or one sentence into a priced, limit-checked
 
 Built in one evening at the **Reap × 65labs Agentic Buildathon**, Singapore, 9 October 2026. Sandbox only: nothing is really bought or shipped.
 
-> **Demo video:** _link added after recording_ · **Product film (interactive):** [`design/glance-product-film.html`](design/glance-product-film.html) · **App mockup:** [`design/glance-app-mockup.html`](design/glance-app-mockup.html)
+> **Demo video (62 s):** [`design/glance-pitch-62s.mp4`](design/glance-pitch-62s.mp4) — narrated version: _link added after the voice-over_ · **Interactive demo:** [`design/glance-app-mockup.html`](design/glance-app-mockup.html) (press **Play the pitch**; phone + Meta Display lens + live backend trace) · **Product film:** [`design/glance-product-film.html`](design/glance-product-film.html) · **Voice-over script:** [`design/pitch-voiceover.md`](design/pitch-voiceover.md)
 
 ---
 
@@ -168,7 +168,9 @@ glance/
 │   └── src/api.demo.ts      offline demo adapter (EXPO_PUBLIC_DEMO=1)
 ├── scripts/happy_path.sh end-to-end by curl: intent → search → quote → checkout → paid
 ├── specs/001-agent-purchase/  spec, clarifications, plan, research, tasks, G1/G2, traceability
-├── design/               product film (interactive) and app mockup
+├── design/               interactive demo (glance-app-mockup.html: phone, Meta Display lens,
+│                            backend trace, 62 s auto-pitch), product film, pitch video + voice-over
+│                            script, headless recorder (record-pitch.mjs)
 ├── docs/                 context, scope lock, run sheet
 └── .specify/             constitution and Spec Kit templates
 ```
@@ -218,3 +220,4 @@ Secrets (`REAP_API_KEY`, test card, LLM key, Kwal credentials) live only in `.en
 - Governing principles: [`.specify/memory/constitution.md`](.specify/memory/constitution.md)
 - The spec, with clarifications: [`specs/001-agent-purchase/spec.md`](specs/001-agent-purchase/spec.md)
 - Plan and research, including live Reap observations: [`plan.md`](specs/001-agent-purchase/plan.md) · [`research.md`](specs/001-agent-purchase/research.md)
+- Demo beats and voice-over, cue by cue: [`design/pitch-voiceover.md`](design/pitch-voiceover.md)
