@@ -34,6 +34,23 @@ Built in one evening at the **Reap × 65labs Agentic Buildathon**, Singapore, 9 
 </tr>
 </table>
 
+<b><a href="https://aljabrialam.github.io/glance/design/glance-product-film.html">👓 With Meta Display glasses — concept</a></b> — the same agent and the same rules, hands-free. Look at a product, say the most you’ll pay, and the HUD shows the agent’s progress and the price-vs-limit check; you still approve on Reap’s page, on your phone. This is a concept animation from the <a href="https://aljabrialam.github.io/glance/design/glance-product-film.html">product film</a> — glasses have no third-party HUD yet, so it is not built; the phone flow is.
+
+<a href="https://aljabrialam.github.io/glance/design/glance-product-film.html?t=5"><img src="design/glance-glasses-concept.gif" alt="Meta Display glasses concept, animated: look at a product, say the limit, the agent finds and prices it, an over-limit total is blocked, approve on the phone, paid from the USDC vault"></a>
+
+<table>
+<tr>
+<td width="33%" valign="top"><a href="https://aljabrialam.github.io/glance/design/glance-product-film.html?t=10.5&pause"><img src="design/thumbs/glasses/01-see.png" alt="Look at it, say the limit"></a><br><sub><b>1 · Look at it, say the limit.</b> “Find me the best price for this, under S$150.” The glasses identify the product on the shelf.</sub></td>
+<td width="33%" valign="top"><a href="https://aljabrialam.github.io/glance/design/glance-product-film.html?t=24.5&pause"><img src="design/thumbs/glasses/02-find.png" alt="The agent searches merchants via Reap"></a><br><sub><b>2 · The agent searches merchants via Reap.</b> S$72.90 at anker.com.sg against S$89.00 on the shelf. It recommends; it does not decide.</sub></td>
+<td width="33%" valign="top"><a href="https://aljabrialam.github.io/glance/design/glance-product-film.html?t=31.5&pause"><img src="design/thumbs/glasses/03-quote.png" alt="The real total against your limit"></a><br><sub><b>3 · The real total against your limit.</b> Item, shipping and GST: S$84.46, S$65.54 under the S$150 limit.</sub></td>
+</tr>
+<tr>
+<td width="33%" valign="top"><a href="https://aljabrialam.github.io/glance/design/glance-product-film.html?t=39.5&pause"><img src="design/thumbs/glasses/04-block.png" alt="Over the limit? It stops"></a><br><sub><b>4 · Over the limit? It stops.</b> Limit set to S$80: S$4.46 over. Checkout blocked, nothing opened, the phone shows why.</sub></td>
+<td width="33%" valign="top"><a href="https://aljabrialam.github.io/glance/design/glance-product-film.html?t=47&pause"><img src="design/thumbs/glasses/05-confirm.png" alt="Approve on your phone"></a><br><sub><b>5 · Approve on your phone.</b> Pinch to send it to the phone. Reap’s hosted page; the agent never sees the card.</sub></td>
+<td width="33%" valign="top"><a href="https://aljabrialam.github.io/glance/design/glance-product-film.html?t=54.5&pause"><img src="design/thumbs/glasses/06-paid.png" alt="Paid from the USDC vault"></a><br><sub><b>6 · Paid from the USDC vault.</b> The amount actually charged, the order reference, vault 250.00 → 165.54 USDC.</sub></td>
+</tr>
+</table>
+
 ## For judges — try it in two minutes
 
 | | |
@@ -220,7 +237,8 @@ glance/
 ├── design/               interactive demo (glance-app-mockup.html: phone, Meta Display lens,
 │                            backend trace, 62 s auto-pitch), product film, pitch video + voice-over
 │                            script, headless recorder (record-pitch.mjs), App Store screenshot
-│                            kit (glance-app-store.html → export-store-shots.sh → app-store/*.png)
+│                            kit (glance-app-store.html → export-store-shots.sh → app-store/*.png),
+│                            glasses concept GIF + stills (record-glasses.mjs → glance-glasses-concept.gif)
 ├── docs/                 technical docs (architecture, infrastructure, persistence, API,
 │                            security, mobile release, delivery plan) + hackathon context,
 │                            scope lock, run sheet — index in docs/README.md
