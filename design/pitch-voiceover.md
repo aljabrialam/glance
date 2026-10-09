@@ -4,6 +4,12 @@ Source: `design/glance-app-mockup.html?play=1` (auto-plays the pitch on load).
 Record the browser in fullscreen; the narration card above the phone shows the
 same beats, so the voice-over below can be read as-is or paraphrased.
 
+Layout in frame: phone (centre) and, top right, the **Meta Display lens** — the
+shelf scene and HUD from the product film. The HUD follows the phone through
+every screen (listening → matches → quote vs limit → "approve on your phone" →
+paid). Toggle it with the "Meta Display view" button or the `M` key
+(`?glass=0` hides it).
+
 ## Prompt for the voice-over tool (screendub.io or similar)
 
 > Voice: calm, confident founder pitching to investors; not salesy, no hype

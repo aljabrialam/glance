@@ -24,7 +24,7 @@
 
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45}
 *{box-sizing:border-box}
-.wrap{max-width:1160px;margin:0 auto;padding-inline:16px;padding-block:24px 48px;display:flex;flex-direction:column;gap:20px}
+.wrap{max-width:1400px;margin:0 auto;padding-inline:16px;padding-block:24px 48px;display:flex;flex-direction:column;gap:20px}
 .top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
 h1{font-family:var(--display);font-weight:700;font-size:34px;line-height:1;margin:0;letter-spacing:-.01em}
 .lede{margin:6px 0 0;color:var(--muted);max-width:60ch}
@@ -121,6 +121,33 @@ pre{margin:0;background:var(--code-bg);color:var(--code-fg);border-radius:10px;p
 .reset{align-self:flex-start;font:inherit;font-size:14px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
 @media (prefers-reduced-motion:reduce){.steps li.now i{animation:none}.fill{transition:none}}
 
+/* Meta Display lens (concept) — same look as the product film */
+.lens{position:relative;width:100%;aspect-ratio:2/1;border-radius:14px;overflow:hidden;background:#131928;border:1px solid #2A3446;color-scheme:dark}
+.lens svg.shelf{position:absolute;inset:0;width:100%;height:100%;display:block}
+.lens .vig{position:absolute;inset:0;box-shadow:inset 0 0 80px 16px rgba(0,0,0,.62);border-radius:14px;pointer-events:none}
+.lens .lcap{position:absolute;left:14px;top:12px;font-family:var(--display);font-weight:700;font-size:16px;color:#F1F3F8;text-shadow:0 1px 6px rgba(0,0,0,.8)}
+.lens .ltag{position:absolute;left:12px;bottom:10px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#C8D0E0;background:rgba(9,13,22,.7);padding:4px 8px;border-radius:5px}
+.lens .band{position:absolute;left:14px;bottom:44px;width:150px;padding:10px;background:rgba(9,13,22,.78);border:1px solid #2A3446;border-radius:10px;display:flex;flex-direction:column;gap:6px;font-family:var(--display);font-weight:700;color:#A9B8FF;font-size:13px}
+.lens .band svg{width:56px;height:auto}
+.hudp{position:absolute;right:3%;top:8%;width:47%;max-height:84%;padding:14px 16px;background:rgba(9,13,22,.8);border:1px solid rgba(169,184,255,.3);border-radius:14px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#A9B8FF;font-family:var(--display);font-weight:700;display:flex;flex-direction:column;gap:7px;overflow:hidden}
+.hudp .hk{font-family:var(--body);font-weight:600;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#C8D0E0}
+.hudp .hbig{font-size:40px;line-height:.95;font-variant-numeric:tabular-nums}.hudp .hbig small{font-size:16px;margin-left:3px}
+.hudp .hmid{font-size:20px;line-height:1.1}
+.hudp .hsay{font-family:var(--body);font-weight:500;font-size:14px;line-height:1.3;color:#F1F3F8}
+.hudp .hsm{font-family:var(--body);font-weight:500;font-size:12px;color:#C8D0E0;line-height:1.35}
+.hudp .hrule{border-top:1px solid #2A3446;padding-top:7px;display:flex;flex-direction:column;gap:6px}
+.hudp .hoffer{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:6px 8px;border:1px solid #2A3446;border-radius:7px;font-size:14px;color:#C8D0E0;font-variant-numeric:tabular-nums}
+.hudp .hoffer span{font-family:var(--body);font-weight:500;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hudp .hoffer.best{border-color:#7BE3B0;color:#7BE3B0}
+.hudp .hpair{display:flex;justify-content:space-between;gap:8px;font-family:var(--body);font-weight:500;font-size:12px;color:#C8D0E0;font-variant-numeric:tabular-nums}
+.hudp .htrack{height:7px;border-radius:7px;background:#2A3446;overflow:hidden}.hudp .htrack i{display:block;height:100%;background:#7BE3B0;border-radius:7px;transition:width .4s ease}.hudp .htrack i.over{background:#FF8C82}
+.hudp .hok{color:#7BE3B0}.hudp .ham{color:#FFC46B}.hudp .hbad{color:#FF8C82}
+.hudp .hcheck{display:flex;align-items:center;gap:7px;font-size:15px}.hudp .hcheck i{width:9px;height:9px;border-radius:50%;background:currentColor;flex:none}
+.hudp .hwave{display:flex;align-items:center;gap:3px;height:16px}.hudp .hwave b{width:3px;height:100%;background:#A9B8FF;border-radius:2px;animation:wv 1s ease-in-out infinite}
+.hudp .hwave b:nth-child(2){animation-delay:.1s;height:60%}.hudp .hwave b:nth-child(3){animation-delay:.2s;height:80%}.hudp .hwave b:nth-child(4){animation-delay:.3s;height:45%}.hudp .hwave b:nth-child(5){animation-delay:.4s}
+.lens .brk{opacity:0;transition:opacity .5s}.lens .brk.on{opacity:1}
+.tb[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+
 /* pitch additions */
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
@@ -191,8 +218,9 @@ pre{margin:0;background:var(--code-bg);color:var(--code-fg);border-radius:10px;p
   <div class="tools">
     <button class="tb primary" id="play">▶ Play the pitch (62 s)</button>
     <button class="tb" data-act="guardrail">Show the guardrail</button>
+    <button class="tb" id="glassB" data-act="glass" aria-pressed="true">Meta Display view: on</button>
     <button class="tb" data-act="reset">Reset</button>
-    <span class="kbd">Keys: ← → screens · space play/pause · G guardrail</span>
+    <span class="kbd">Keys: ← → screens · space play/pause · G guardrail · M glasses view</span>
   </div>
 
   <div class="layout">
@@ -233,6 +261,7 @@ var P=[
 var SHIP={std:{id:'ship_std',n:'Standard delivery',p:500,eta:'3\u20135 days'},exp:{id:'ship_exp',n:'Express delivery',p:1200,eta:'next day'}};
 var GST_BP=900, START=25000, LAST4='4242';
 var S0={scr:'home',limit:15000,ship:'std',vault:START,pick:0,orders:[],busy:0,toast:'',last:null,src:'text',photo:false,approving:0,seq:1};
+var GLASS=true;
 var S=JSON.parse(JSON.stringify(S0));
 var SCREENS=[['home','Home'],['ask','Ask'],['results','Results'],['quote','Quote'],['approve','Approve'],['paid','Paid'],['limit','Spending limit']];
 function item(){return P[S.pick].p}
@@ -370,6 +399,44 @@ var V={
  }
 };
 
+// ---------- Meta Display lens: the glasses follow the phone (concept) ----------
+var SHELF='<svg class="shelf" viewBox="0 0 1600 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">'+
+ '<defs><linearGradient id="lw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B3550"/><stop offset="1" stop-color="#131928"/></linearGradient>'+
+ '<linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE2B0" stop-opacity=".5"/><stop offset="1" stop-color="#FFE2B0" stop-opacity="0"/></linearGradient></defs>'+
+ '<rect width="1600" height="800" fill="url(#lw)"/><path d="M300 0 L760 0 L900 560 L160 560 Z" fill="url(#lg)"/>'+
+ '<rect y="560" width="1600" height="20" fill="#4A556E"/><rect y="580" width="1600" height="10" fill="#0C111B"/>'+
+ '<rect x="40" y="400" width="140" height="160" rx="6" fill="#39445C"/><rect x="60" y="424" width="100" height="56" rx="4" fill="#55617C"/><rect x="196" y="440" width="110" height="120" rx="6" fill="#2F3A52"/>'+
+ '<rect x="760" y="420" width="120" height="140" rx="6" fill="#39445C"/><rect x="900" y="380" width="160" height="180" rx="6" fill="#2F3A52"/>'+
+ '<rect y="770" width="1600" height="30" fill="#3B455C"/><rect x="90" y="660" width="180" height="110" rx="6" fill="#2F3A52"/><rect x="320" y="690" width="140" height="80" rx="6" fill="#39445C"/><rect x="700" y="680" width="200" height="90" rx="6" fill="#2F3A52"/>'+
+ '<rect x="430" y="350" width="220" height="210" rx="8" fill="#F1F3F8"/><rect x="430" y="350" width="220" height="42" rx="8" fill="#1B2130"/>'+
+ '<text x="540" y="380" text-anchor="middle" font-family="Bricolage Grotesque, Arial" font-weight="700" font-size="24" fill="#F1F3F8" letter-spacing="4">ANKER</text>'+
+ '<rect x="462" y="424" width="156" height="50" rx="9" fill="#C8D0E0"/><rect x="474" y="437" width="16" height="24" rx="3" fill="#1B2130"/><rect x="498" y="437" width="16" height="24" rx="3" fill="#1B2130"/><rect x="522" y="437" width="16" height="24" rx="3" fill="#1B2130"/><rect x="546" y="437" width="28" height="24" rx="3" fill="#1B2130"/><rect x="582" y="437" width="26" height="24" rx="3" fill="#1B2130"/>'+
+ '<text x="540" y="516" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-weight="600" font-size="17" fill="#141A27">Nano USB-C Hub \u00b7 8-in-1</text>'+
+ '<rect x="474" y="594" width="132" height="50" rx="6" fill="#F1F3F8"/><text x="540" y="628" text-anchor="middle" font-family="Bricolage Grotesque, Arial" font-weight="700" font-size="30" fill="#141A27">S$89.00</text>'+
+ '<g class="brk" id="brk" fill="none" stroke="#A9B8FF" stroke-width="4"><path d="M400 330 V300 H430 M650 300 H680 V330 M680 540 V570 H650 M430 570 H400 V540"/><text x="400" y="284" stroke="none" fill="#A9B8FF" font-family="Bricolage Grotesque, Arial" font-weight="700" font-size="24">ANKER NANO USB-C HUB 8-IN-1</text></g>'+
+ '<g class="brk" id="brkp"><rect x="462" y="586" width="156" height="66" rx="10" fill="none" stroke="#FFC46B" stroke-width="4" stroke-dasharray="10 8"/><text x="540" y="684" text-anchor="middle" font-family="Bricolage Grotesque, Arial" font-weight="700" font-size="20" fill="#FFC46B">SHELF PRICE</text></g></svg>';
+var BAND='<div class="band"><svg viewBox="0 0 180 90" fill="none" stroke="#A9B8FF" stroke-width="6" stroke-linecap="round" aria-hidden="true"><rect x="10" y="30" width="160" height="30" rx="15"/><circle cx="60" cy="45" r="5" fill="#A9B8FF"/><circle cx="90" cy="45" r="5" fill="#A9B8FF"/><circle cx="120" cy="45" r="5" fill="#A9B8FF"/></svg>Neural Band \u00b7 pinch</div>';
+function hud(){
+  var p=P[S.pick],t=total(),d=dec(t),over=!d.allowed,pct=Math.min(100,Math.round(t*100/S.limit)),lim=m(S.limit).replace('.00','');
+  var say='<span class="hsay">\u201cFind me the best price for this, under '+lim+'.\u201d</span>';
+  switch(S.scr){
+  case 'home':return {cap:'Glance on Meta Display',h:'<span class="hk">Glance</span><span class="hmid">'+usd(S.vault)+' USDC</span><span class="hsm">Vault backs card \u2022\u2022\u2022\u2022 '+LAST4+' \u00b7 limit '+lim+' per purchase</span><div class="hrule">'+(S.orders.length?'<span class="hsm">Last order '+S.orders[0].ref+' \u00b7 '+m(S.orders[0].amt)+'</span>':'<span class="hsm">Look at something and ask for it.</span>')+'</div>',brk:0,price:0};
+  case 'ask':return S.busy?{cap:'The agent searches merchants',h:'<span class="hk">'+(S.busy===1?'Understood':S.busy===2?'Searching merchants':'Checking live prices')+'</span><span class="hmid">Anker Nano USB-C Hub 8-in-1</span><span class="hsm">Limit '+lim+' per purchase</span><div class="hrule"><div class="hcheck ham"><i></i>'+(S.busy===1?'Reading your request':S.busy===2?'Reap products/search \u00b7 SG':'Reap products/details')+'</div></div>',brk:1,price:0}
+    :{cap:'Look at it. Ask for it.',h:'<span class="hk">Listening</span><div class="hwave"><b></b><b></b><b></b><b></b><b></b></div>'+say+'<div class="hrule"><span class="hk">Understood</span><span class="hmid">Anker Nano USB-C Hub 8-in-1</span><span class="hsm">Limit '+lim+' per purchase</span></div>',brk:1,price:0};
+  case 'results':return {cap:'The agent searches merchants',h:'<span class="hk">'+P.filter(function(x){return x.p<=S.limit}).length+' matches \u00b7 via Reap</span>'+P.map(function(x,i){if(x.p>S.limit)return '';return '<div class="hoffer'+(i===S.pick?' best':'')+'">'+m(x.p)+'<span>'+esc(x.n.replace('Anker ',''))+(i===0?' \u00b7 pick':'')+'</span></div>'}).join('')+'<div class="hrule"><div class="hcheck hok"><i></i>'+m(8900-p.p)+' less than the shelf</div></div>',brk:1,price:1};
+  case 'quote':return {cap:over?'Over the limit. Glance stops.':'Real total, checked against your limit',h:'<span class="hk">Quote \u00b7 '+p.m+'</span><span class="hbig'+(over?' hbad':'')+'">'+(over?m(d.overByCents):m(t)).replace(/\.(\d\d)$/,'<small>.$1</small>')+'</span><div class="hpair"><span>'+(over?'over your limit \u00b7 total '+m(t):'Item '+usd(item())+' \u00b7 Delivery '+usd(SHIP[S.ship].p)+' \u00b7 GST '+usd(tax()))+'</span></div><div class="hrule"><div class="htrack"><i class="'+(over?'over':'')+'" style="width:'+pct+'%"></i></div><div class="hpair"><span>Your limit</span><span>'+lim+'</span></div><div class="hcheck '+(over?'hbad':'hok')+'"><i></i>'+(over?'Checkout blocked. Nothing opened.':m(d.remainingCents)+' under your limit')+'</div></div>',brk:0,price:1};
+  case 'approve':return {cap:'You approve on your phone',h:'<span class="hk">Confirm</span><span class="hmid">Buy for '+m(t)+'?</span><span class="hsm">Pinch to send it to your phone</span><div class="hrule"><div class="hcheck ham"><i></i>'+(S.approving?'Confirming with Reap\u2026':'Waiting for you')+'</div><span class="hsm">Approve the charge on your phone. The agent never sees your card.</span></div>',brk:0,price:0,band:1};
+  case 'paid':var o=S.last||{amt:t,ref:'ORD-SG-1003',after:S.vault-t};return {cap:'Paid from stablecoins',h:'<span class="hk">Paid from your USDC vault</span><span class="hbig hok">'+m(o.amt).replace(/\.(\d\d)$/,'<small>.$1</small>')+'</span><div class="hpair"><span>Order '+o.ref+'</span><span>'+SHIP[S.ship].n+'</span></div><div class="hrule"><span class="hk">Vault balance</span><span class="hmid">'+usd(o.after)+' USDC</span><span class="hsm">Your wallet, your stablecoins, a real card payment.</span></div>',brk:0,price:0};
+  case 'limit':return {cap:'The permission is one number',h:'<span class="hk">Spending limit</span><span class="hbig">'+lim+'</span><span class="hsm">per purchase, delivery and GST included</span><div class="hrule"><span class="hsm">Glance stops above this. You still approve every charge on your phone.</span></div>',brk:0,price:0};
+  }
+}
+function lens(){
+  if(!GLASS)return '';
+  var h=hud();
+  return '<div class="lens" aria-label="Meta Display view, concept">'+SHELF+'<div class="vig"></div><div class="lcap">'+h.cap+'</div>'+(h.band?BAND:'')+'<div class="hudp">'+h.h+'</div><div class="ltag">Meta Display \u00b7 concept \u00b7 the glasses show the same flow; the phone does the work</div></div>';
+}
+function lensSync(){var b=document.getElementById('brk'),q=document.getElementById('brkp');if(!b)return;var h=hud();b.classList.toggle('on',!!h.brk);q.classList.toggle('on',!!h.price)}
+
 // ---------- render ----------
 var screen=document.getElementById('screen'),rail=document.getElementById('rail'),spec=document.getElementById('spec'),narr=document.getElementById('narr'),pbar=document.getElementById('pbar');
 var holdT=null,hold=600,traceTimers=[];
@@ -383,12 +450,13 @@ function render(){
   screen.innerHTML=V[S.scr]();
   rail.innerHTML=SCREENS.map(function(s,i){return (s[0]==='limit'?'<li class="sep" aria-hidden="true"></li>':'')+'<li><button data-go="'+s[0]+'" aria-current="'+(S.scr===s[0])+'"><b>'+(i<6?'0'+(i+1):'\u00b7\u00b7')+'</b>'+s[1]+'</button></li>'}).join('');
   var d=PANEL()[S.scr];
-  spec.innerHTML='<h2>'+d.t+'</h2><p>'+d.see+'</p><h3>Live trace \u00b7 what the backend does</h3><div class="trace" id="trace"></div>'+
+  spec.innerHTML=lens()+'<h2>'+d.t+'</h2><p>'+d.see+'</p><h3>Live trace \u00b7 what the backend does</h3><div class="trace" id="trace"></div>'+
    '<div class="kv"><div><h3>Request</h3><pre>'+esc(d.req)+'</pre></div><div><h3>Response</h3><pre>'+esc(d.res)+'</pre></div></div>'+
    '<h3>Guarantees on this screen</h3><div class="guar">'+d.guar.map(function(g){return '<div><i>\u2713</i><span>'+g+'</span></div>'}).join('')+'</div>';
   var nk=S.scr==='quote'&&!dec(total()).allowed?'quoteOver':S.scr;
   narr.innerHTML='<b>'+NARR[nk][0]+'</b>'+NARR[nk][1];
   runTrace(d.trace);
+  requestAnimationFrame(lensSync);
   clearInterval(holdT);
   if(S.scr==='quote'&&document.getElementById('hold')){hold=600;holdT=setInterval(function(){var e=document.getElementById('hold');if(!e){clearInterval(holdT);return}hold=Math.max(0,hold-1);e.textContent=Math.floor(hold/60)+':'+('0'+hold%60).slice(-2)},1000)}
 }
@@ -411,6 +479,7 @@ document.addEventListener('click',function(e){
   if(a==='savelimit'){S.toast='';go(S.prev==='quote'?'quote':'home')}
   if(a==='reset')reset();
   if(a==='guardrail'){runGuardrail()}
+  if(a==='glass'){toggleGlass()}
 });
 document.addEventListener('change',function(e){
   if(e.target.name==='pick'){S.pick=+e.target.value}
@@ -446,6 +515,7 @@ function runPitch(){
   ];
   steps.forEach(function(s){at(s[0],s[1])});progress(62000);
 }
+function toggleGlass(){GLASS=!GLASS;var g=document.getElementById('glassB');g.setAttribute('aria-pressed',GLASS);g.textContent='Meta Display view: '+(GLASS?'on':'off');render()}
 function runGuardrail(){stopPitch();S.limit=8000;S.pick=0;S.ship='std';go('quote')}
 playB.addEventListener('click',function(){if(pitching)stopPitch();else runPitch()});
 document.addEventListener('keydown',function(e){
@@ -455,12 +525,13 @@ document.addEventListener('keydown',function(e){
   else if(e.key==='ArrowLeft'){stopPitch();go(SCREENS[Math.max(0,i-1)][0])}
   else if(e.key===' '){e.preventDefault();if(pitching)stopPitch();else runPitch()}
   else if(e.key==='g'||e.key==='G'){runGuardrail()}
+  else if(e.key==='m'||e.key==='M'){toggleGlass()}
 });
 
 // ---------- deep links for recording: ?scr=quote&limit=8000&ship=exp&pick=0&src=camera&photo=1&play=1 ----------
 var q=new URLSearchParams(location.search);
 if(q.get('limit'))S.limit=+q.get('limit');if(q.get('ship'))S.ship=q.get('ship');if(q.get('pick'))S.pick=+q.get('pick');
-if(q.get('src'))S.src=q.get('src');if(q.get('photo'))S.photo=true;if(q.get('scr'))S.scr=q.get('scr');
+if(q.get('src'))S.src=q.get('src');if(q.get('glass')==='0'){GLASS=false;var gb=document.getElementById('glassB');gb.setAttribute('aria-pressed','false');gb.textContent='Meta Display view: off'}if(q.get('photo'))S.photo=true;if(q.get('scr'))S.scr=q.get('scr');
 render();
 if(q.has('play'))runPitch();
 })();
