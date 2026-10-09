@@ -45,6 +45,12 @@ Built in one evening at the **Reap × 65labs Agentic Buildathon**, Singapore, 9 
 <b><a href="https://www.youtube.com/watch?v=vuL4Ya3pzrs">🎬 Demo video</a></b> — 62 s, narrated. Silent master in the repo: <a href="design/glance-pitch-62s.mp4"><code>design/glance-pitch-62s.mp4</code></a>.
 </td>
 </tr>
+<tr>
+<td colspan="2" valign="top">
+<a href="https://aljabrialam.github.io/glance/design/glance-app-store.html"><img src="design/thumbs/app-store.png" alt="App Store screenshots: eight 1290x2796 panels, home to spending limit"></a>
+<b><a href="https://aljabrialam.github.io/glance/design/glance-app-store.html">📱 App Store screenshots</a></b> — the shipped look: eight 1290×2796 panels (home, scan, results, quote, over-limit block, approval, receipt, limit) in <a href="design/app-store/1290x2796"><code>design/app-store/</code></a>. Source is <code>design/glance-app-store.html</code>; regenerate with <code>design/export-store-shots.sh</code>.
+</td>
+</tr>
 </table>
 
 ---
@@ -202,7 +208,8 @@ glance/
 ├── specs/001-agent-purchase/  spec, clarifications, plan, research, tasks, G1/G2, traceability
 ├── design/               interactive demo (glance-app-mockup.html: phone, Meta Display lens,
 │                            backend trace, 62 s auto-pitch), product film, pitch video + voice-over
-│                            script, headless recorder (record-pitch.mjs)
+│                            script, headless recorder (record-pitch.mjs), App Store screenshot
+│                            kit (glance-app-store.html → export-store-shots.sh → app-store/*.png)
 ├── docs/                 context, scope lock, run sheet
 └── .specify/             constitution and Spec Kit templates
 ```

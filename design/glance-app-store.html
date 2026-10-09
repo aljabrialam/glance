@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Glance — App Store screenshots</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Eight 1290x2796 artboards (the 6.7"/6.9" App Store size). Open with no query for a scaled gallery; ?shot=N renders one artboard
+   at full size for export (design/export-store-shots.sh). Everything inside the phone is laid out in iPhone logical points (393x852)
+   and scaled with CSS zoom, so the in-app type sizes read like the real app. Same tokens as glance-app-mockup.html, light theme. */
+:root{
+  --bg:#F3F5F8; --surface:#FFFFFF; --ink:#101828; --muted:#566076; --line:#D7DDE8;
+  --accent:#2343E0; --accent-ink:#FFFFFF; --accent-soft:#E6EAFD;
+  --ok:#0E7A4B; --ok-soft:#DDF3E8; --stop:#B3261E; --stop-soft:#FBE2E0; --hosted:#EEF0F3;
+  --display:'Bricolage Grotesque','Arial Narrow',Arial,sans-serif;
+  --body:'IBM Plex Sans',-apple-system,'Segoe UI',Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  --z:1;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+.nw{font-style:normal;white-space:nowrap}
+body{background:#05070C;color:#EDF1F8;font-family:var(--body);font-size:16px;line-height:1.45}
+body.shot{overflow:hidden;width:100vw;height:100vh}
+body.gallery{padding:28px 32px 48px;display:flex;flex-direction:column;gap:20px}
+.gallery h1{font-family:var(--display);font-weight:700;font-size:28px;margin:0;line-height:1.1}
+.gallery p{margin:0;color:#9AA6BC;max-width:80ch;font-size:14px}
+.gallery code{font-family:var(--mono);font-size:13px;color:#C8D0E0}
+.grid{display:flex;flex-wrap:wrap;gap:22px}
+.cell{display:flex;flex-direction:column;gap:8px;color:#9AA6BC;font-size:12px;font-family:var(--mono);text-decoration:none}
+.cell:hover{color:#EDF1F8}
+.gallery .art{zoom:.18;border-radius:48px;box-shadow:0 0 0 2px rgba(255,255,255,.08)}
+body.contact{display:flex;gap:16px;padding:16px;width:max-content;background:#05070C}
+.contact .art{flex:none;zoom:.1;border-radius:40px}
+
+/* artboard */
+.art{position:relative;width:1290px;height:2796px;overflow:hidden;zoom:var(--z);display:flex;flex-direction:column;align-items:center;color:#fff;font-family:var(--body)}
+.art.blue{background:radial-gradient(110% 55% at 50% -8%,#5570FF 0%,rgba(85,112,255,0) 62%),linear-gradient(180deg,#2A4BF0 0%,#1B35BC 100%)}
+.art.light{background:radial-gradient(90% 46% at 50% -6%,#E6EAFD 0%,rgba(230,234,253,0) 62%),#F3F5F8;color:var(--ink)}
+.art.dark{background:radial-gradient(100% 50% at 50% -6%,#24305E 0%,rgba(36,48,94,0) 64%),linear-gradient(180deg,#111A2E 0%,#0A0E17 100%);color:#EDF1F8}
+.cap{position:relative;z-index:2;min-height:790px;width:100%;padding:150px 90px 0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.hl{font-family:var(--display);font-weight:700;font-size:108px;line-height:.98;letter-spacing:-.025em;margin:0;text-wrap:balance}
+.sl{font-size:42px;font-weight:500;line-height:1.3;margin:34px auto 0;max-width:1060px;text-wrap:balance;color:rgba(255,255,255,.86)}
+.art.light .sl{color:var(--muted)} .art.dark .sl{color:#B4BED2}
+.glow{position:absolute;left:50%;top:620px;width:1700px;height:1700px;transform:translateX(-50%);border-radius:50%;pointer-events:none;background:radial-gradient(closest-side,rgba(255,255,255,.2),rgba(255,255,255,0))}
+.art.light .glow{background:radial-gradient(closest-side,rgba(35,67,224,.14),rgba(35,67,224,0))}
+.art.dark .glow{background:radial-gradient(closest-side,rgba(142,162,255,.2),rgba(142,162,255,0))}
+.phwrap{position:relative;z-index:1;margin-top:56px;display:flex;justify-content:center}
+
+/* phone, in logical points, scaled to a 904px-wide screen */
+.ph{position:relative;width:422px;height:881px;zoom:2.3;border-radius:70px;padding:2.5px;color:var(--ink);font-size:16px;line-height:1.45;
+  background:linear-gradient(150deg,#737A88 0%,#3A3F48 28%,#1E222A 52%,#3A3F48 78%,#6C7382 100%);
+  box-shadow:0 44px 90px rgba(0,0,0,.42),0 10px 24px rgba(0,0,0,.25),inset 0 0 0 1px rgba(255,255,255,.14)}
+.ph .bez{width:100%;height:100%;border-radius:67.5px;background:#05070C;padding:12px}
+.ph .scr{position:relative;width:393px;height:852px;border-radius:55px;overflow:hidden;background:var(--bg)}
+.ph .sbtn{position:absolute;width:3.5px;border-radius:2px;background:linear-gradient(90deg,#4A515D,#8A91A0 50%,#4A515D)}
+.ph .sbtn.l{left:-3.5px}.ph .sbtn.r{right:-3.5px}
+.isl{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:125px;height:37px;border-radius:19px;background:#000;z-index:6}
+.sb{position:absolute;top:0;left:0;right:0;height:59px;display:flex;justify-content:space-between;align-items:center;padding:14px 30px 0 42px;font-weight:600;font-size:17px;letter-spacing:-.01em;z-index:5;font-variant-numeric:tabular-nums}
+.sb .ic{display:flex;gap:7px;align-items:center}
+.sb svg{display:block}
+.hb{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:139px;height:5px;border-radius:3px;background:var(--ink);z-index:5}
+
+/* app */
+.app{position:absolute;inset:0;padding-top:59px;display:flex;flex-direction:column}
+.view{flex:1;min-height:0;overflow:hidden;padding:6px 20px 12px;display:flex;flex-direction:column;gap:12px}
+.foot{padding:12px 20px 44px;display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);background:var(--surface)}
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:4px 0 2px}
+.wm{font-family:var(--display);font-weight:800;font-size:28px;letter-spacing:-.02em}
+.av{width:36px;height:36px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.h{font-family:var(--display);font-weight:700;font-size:28px;line-height:1.08;margin:0;letter-spacing:-.015em;text-wrap:balance}
+.sub{color:var(--muted);font-size:15px;margin:0;line-height:1.4}
+.center{text-align:center}
+.k{font-size:11.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.back{display:flex;align-items:center;gap:6px;color:var(--accent);font-size:16px;font-weight:500}
+.btn{font-weight:600;font-size:17px;border-radius:14px;padding:15px 18px;min-height:54px;background:var(--accent);color:var(--accent-ink);text-align:center}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.off{opacity:.5}
+.link{font-size:15px;font-weight:600;color:var(--accent);white-space:nowrap}
+.vault{position:relative;overflow:hidden;background:var(--accent);color:#fff;border-radius:22px;padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px}
+.vault:before{content:'';position:absolute;right:-70px;top:-90px;width:260px;height:260px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.22),rgba(255,255,255,0))}
+.vault .vtop{display:flex;justify-content:space-between;align-items:center}
+.vault .k{color:inherit;opacity:.82}
+.vault .tag{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:rgba(255,255,255,.18)}
+.vault .amt{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;font-variant-numeric:tabular-nums;margin-top:6px}
+.vault .amt small{font-size:17px;font-weight:600;margin-left:6px}
+.vault .meta{font-size:14px;opacity:.86}
+.rowc{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.rowc strong{display:block;font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.3}
+.rowc span{font-size:13.5px;color:var(--muted)}
+.rowc>strong{white-space:nowrap}
+.pill{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--ok-soft);color:var(--ok);white-space:nowrap}
+.seg{display:flex;gap:3px;padding:3px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.seg div{flex:1;display:flex;gap:8px;justify-content:center;align-items:center;font-size:14.5px;font-weight:600;padding:10px 6px;border-radius:11px;color:var(--muted)}
+.seg .on{background:var(--accent-soft);color:var(--accent)}
+.photo{display:flex;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.photo .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.photo strong{font-size:15.5px;font-weight:600}
+.photo .mt{font-size:13.5px;color:var(--muted);line-height:1.35}
+.thumb{width:64px;height:64px;border-radius:12px;flex:none;background:linear-gradient(180deg,#2B3550,#131928)}
+.thumb svg{display:block}
+.ta{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;min-height:88px;font-size:16px;line-height:1.4}
+.ta i{display:inline-block;width:2px;height:19px;background:var(--accent);vertical-align:-4px;margin-left:1px}
+.steps{display:flex;flex-direction:column;gap:10px;font-size:15px}
+.steps div{display:flex;gap:12px;align-items:center;color:var(--muted)}
+.steps i{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center}
+.steps .done{color:var(--ink)} .steps .done i{background:var(--ok);border-color:var(--ok)}
+.steps .now{color:var(--ink)} .steps .now i{border-color:var(--accent);border-top-color:transparent;transform:rotate(40deg)}
+.opt{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:12px 14px}
+.opt.on{border-color:var(--accent);background:var(--accent-soft)}
+.rd{width:22px;height:22px;border-radius:50%;border:2px solid #B9C1D1;flex:none;margin-top:1px;background:#fff}
+.opt.on .rd{border:7px solid var(--accent)}
+.opt .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.opt .nm{font-weight:600;font-size:15.5px;line-height:1.3}
+.opt .mt{font-size:13.5px;color:var(--muted)}
+.opt .pr{font-weight:600;font-size:16px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.lines{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:3px 16px}
+.lines div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px;font-variant-numeric:tabular-nums}
+.lines div:last-child{border-bottom:0;font-weight:600;font-size:17px}
+.lines .r{text-align:right}
+.meter{display:flex;flex-direction:column;gap:7px}
+.track{height:10px;border-radius:999px;background:#DDE2EC;overflow:hidden}
+.fill{height:100%;border-radius:999px;background:var(--ok)} .fill.over{background:var(--stop)}
+.mrow{display:flex;justify-content:space-between;gap:8px;font-size:13.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.note{font-size:13.5px;color:var(--muted);margin:0;line-height:1.4}
+.alert{background:var(--stop-soft);color:var(--stop);border-radius:14px;padding:11px 14px;font-size:15px;font-weight:500;line-height:1.35}
+.hosted{background:var(--hosted);flex:1;min-height:0;display:flex;flex-direction:column}
+.url{display:flex;align-items:center;gap:8px;margin:8px 14px 0;padding:10px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line);font-family:var(--mono);font-size:13px;color:var(--ink)}
+.url .dim{color:var(--muted);font-family:var(--body);font-weight:500;margin-left:auto}
+.hosted .view{gap:14px;padding-top:14px}
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.sheet .amt{font-family:var(--display);font-weight:700;font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
+.sheet .nm{font-size:16px;font-weight:600}
+.dm{width:76px;height:76px;border-radius:50%;background:var(--ok-soft);display:grid;place-items:center;align-self:center;margin-top:26px}
+.delta{color:var(--ok);font-weight:600}
+.bigval{font-family:var(--display);font-weight:700;font-size:56px;line-height:1;text-align:center;margin-top:22px;font-variant-numeric:tabular-nums}
+.slider{position:relative;height:28px;margin:4px 6px 0}
+.slider .tr{position:absolute;left:0;right:0;top:12px;height:4px;border-radius:2px;background:#DDE2EC}
+.slider .fl{position:absolute;left:0;top:12px;height:4px;border-radius:2px;background:var(--accent);width:40%}
+.slider .th{position:absolute;top:0;left:calc(40% - 14px);width:28px;height:28px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.28),0 0 0 .5px rgba(0,0,0,.08)}
+.presets{display:flex;gap:8px}
+.presets span{flex:1;text-align:center;font-size:14px;font-weight:600;padding:9px 0;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-variant-numeric:tabular-nums}
+.presets .on{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.tog{width:46px;height:28px;border-radius:14px;background:var(--ok);position:relative;flex:none}
+.tog:after{content:'';position:absolute;top:2px;right:2px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.hfoot{margin-top:auto;text-align:center;font-size:12.5px;color:var(--muted);line-height:1.45}
+.hfoot b{display:block;font-family:var(--display);font-weight:800;font-size:15px;color:var(--ink);letter-spacing:-.01em;margin-bottom:2px}
+</style>
+<body>
+<script>
+(function(){
+// ---------- icons ----------
+var ic={
+ cell:'<svg width="19" height="12" viewBox="0 0 19 12" fill="currentColor"><rect y="8" width="3.6" height="4" rx="1"/><rect x="5.1" y="5.5" width="3.6" height="6.5" rx="1"/><rect x="10.2" y="3" width="3.6" height="9" rx="1"/><rect x="15.3" width="3.6" height="12" rx="1"/></svg>',
+ wifi:'<svg width="18" height="13" viewBox="0 0 18 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1.6 4.6a11 11 0 0 1 14.8 0"/><path d="M4.4 7.6a7 7 0 0 1 9.2 0"/><path d="M7.2 10.5a3 3 0 0 1 3.6 0"/></svg>',
+ batt:'<svg width="28" height="13" viewBox="0 0 28 13"><rect x=".6" y=".6" width="23" height="11.8" rx="3.6" fill="none" stroke="currentColor" opacity=".4"/><rect x="2.2" y="2.2" width="19.8" height="8.6" rx="2.2" fill="currentColor"/><path d="M25.4 4.4v4.2a2.1 2.1 0 0 0 0-4.2Z" fill="currentColor" opacity=".45"/></svg>',
+ chev:'<svg width="10" height="17" viewBox="0 0 10 17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 1.5 1.5 8.5l7 7"/></svg>',
+ cam:'<svg width="18" height="16" viewBox="0 0 18 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M1.5 5.5a2 2 0 0 1 2-2h2l1.2-2h4.6l1.2 2h2a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2z"/><circle cx="9" cy="8.8" r="3"/></svg>',
+ kbd:'<svg width="18" height="13" viewBox="0 0 18 13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="16" height="11" rx="2"/><path d="M4 4.5h.6M7.4 4.5h.6M10.8 4.5h.6M14 4.5h.6M4 7.5h.6M7.4 7.5h.6M10.8 7.5h.6M14 7.5h.6M5.5 10h7"/></svg>',
+ chk:'<svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.5l2.5 2.5 4.5-5"/></svg>',
+ bigchk:'<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#0E7A4B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+ lock:'<svg width="12" height="14" viewBox="0 0 12 14" fill="#0E7A4B"><path d="M3 6V4.5a3 3 0 0 1 6 0V6h.5A1.5 1.5 0 0 1 11 7.5v4A1.5 1.5 0 0 1 9.5 13h-7A1.5 1.5 0 0 1 1 11.5v-4A1.5 1.5 0 0 1 2.5 6H3Zm1.5 0h3V4.5a1.5 1.5 0 0 0-3 0V6Z"/></svg>',
+ user:'<svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><circle cx="9" cy="6" r="3.4"/><path d="M2.5 16a6.5 6.5 0 0 1 13 0Z"/></svg>',
+ hub:'<svg width="64" height="64" viewBox="0 0 64 64"><path d="M15 33H9.5c-3 0-3-7 0-7H14" fill="none" stroke="#C9D0DE" stroke-width="2" stroke-linecap="round"/><rect x="14" y="26" width="36" height="14" rx="3" fill="#E3E8F2"/><rect x="18" y="31" width="5" height="4" rx="1" fill="#1B2130"/><rect x="26" y="31" width="5" height="4" rx="1" fill="#1B2130"/><rect x="34" y="31" width="5" height="4" rx="1" fill="#1B2130"/><rect x="42" y="31" width="4" height="4" rx="1" fill="#1B2130"/><path d="M8 17v-7h7M49 10h7v7M56 47v7h-7M15 54H8v-7" fill="none" stroke="#A9B8FF" stroke-width="1.8" stroke-linecap="round"/></svg>'
+};
+var E='\u2022\u2022\u2022\u2022 4242';
+function nb(s){return s.replace(/\S+-\S+/g,function(m){return '<i class="nw">'+m+'</i>'})}
+var ITEM='Anker Nano USB-C Hub (8-in-1)', ITEMH=nb(ITEM);
+
+// ---------- phone chrome ----------
+function sb(){return '<div class="isl"></div><div class="sb"><span>9:41</span><span class="ic">'+ic.cell+ic.wifi+ic.batt+'</span></div>'}
+function hb(){return '<div class="hb"></div>'}
+function back(t){return '<div class="back">'+ic.chev+t+'</div>'}
+function opt(on,nm,mt,pr,pill){return '<div class="opt'+(on?' on':'')+'"><span class="rd"></span><span class="body"><span class="nm">'+nb(nm)+'</span><span class="mt">'+mt+'</span>'+(pill?'<span><span class="pill">'+pill+'</span></span>':'')+'</span><span class="pr">'+pr+'</span></div>'}
+
+// ---------- the eight screens, in their shipped state ----------
+var V={
+ home:function(){return sb()+'<div class="app"><div class="view">'+
+  '<div class="hdr"><span class="wm">Glance</span><span class="av">'+ic.user+'</span></div>'+
+  '<div class="vault"><div class="vtop"><span class="k">USDC vault</span><span class="tag">Kwal</span></div><span class="amt">165.54<small>USDC</small></span><span class="meta">Backs card '+E+' \u00b7 ready to spend</span></div>'+
+  '<div class="rowc"><div><strong>S$150.00 per purchase</strong><span>Glance stops above this</span></div><span class="link">Change</span></div>'+
+  '<span class="k">Orders</span>'+
+  '<div class="rowc"><div><strong>'+ITEMH+'</strong><span>ORD-SG-1003 \u00b7 anker.com.sg \u00b7 Today</span></div><strong>S$84.46</strong></div>'+
+  '<div class="rowc"><div><strong>Logitech Pebble Keys 2 K380s</strong><span>ORD-SG-0971 \u00b7 logitech.com.sg \u00b7 2 Oct</span></div><strong>S$59.00</strong></div>'+
+  '</div><div class="foot"><div class="btn">Ask Glance to buy something</div></div></div>'+hb()},
+ ask:function(){return sb()+'<div class="app"><div class="view">'+back('Home')+
+  '<h2 class="h">What should I buy?</h2><p class="sub">Point the camera at it, or just tell me.</p>'+
+  '<div class="seg"><div class="on">'+ic.cam+'Scan</div><div>'+ic.kbd+'Type</div></div>'+
+  '<div class="photo"><div class="thumb">'+ic.hub+'</div><div class="body"><strong>Photo attached</strong><span class="mt">Glance will identify the product in it</span></div><span class="link">Remove</span></div>'+
+  '<div class="ta">under S$150<i></i></div>'+
+  '<div class="steps"><div class="done"><i>'+ic.chk+'</i>Looking at the photo</div><div class="now"><i></i>Searching merchants</div><div><i></i>Checking live prices</div></div>'+
+  '</div><div class="foot"><div class="btn off">Working\u2026</div></div></div>'+hb()},
+ results:function(){return sb()+'<div class="app"><div class="view">'+back('Ask')+
+  '<h2 class="h">3 matches found</h2><p class="sub">From merchant catalogues \u00b7 Singapore. Prices before delivery and GST.</p>'+
+  opt(true,ITEM,'anker.com.sg','S$72.90','Agent\u2019s pick')+
+  opt(false,'Anker 7-in-1 USB-C Hub (A8346)','anker.com.sg','S$49.90')+
+  opt(false,'Anker 553 USB-C Hub (8-in-1, 100W)','anker.com.sg','S$109.90')+
+  '</div><div class="foot"><div class="btn">Get the full price</div></div></div>'+hb()},
+ quote:function(){return quote(false)},
+ blocked:function(){return quote(true)},
+ approve:function(){return sb()+'<div class="app"><div class="hosted"><div class="url">'+ic.lock+'<span>pay.reap.global</span><span class="dim">Secure checkout</span></div><div class="view">'+
+  '<div class="sheet"><span class="k">Approve this payment</span><span class="amt">S$84.46</span><span class="nm">'+ITEMH+'</span><span class="sub">anker.com.sg \u00b7 Standard delivery</span></div>'+
+  '<div class="rowc"><div><strong>Card '+E+'</strong><span>Backed by your USDC vault</span></div><span class="pill">Active</span></div>'+
+  '<p class="note">Your card details stay with Reap. Glance never sees them, and declining charges nothing.</p>'+
+  '<div class="hfoot"><b>reap</b>Payments secured by Reap \u00b7 Encrypted end to end</div>'+
+  '</div></div><div class="foot"><div class="btn">Approve S$84.46</div><div class="btn ghost">Decline</div></div></div>'+hb()},
+ paid:function(){return sb()+'<div class="app"><div class="view">'+
+  '<div class="dm">'+ic.bigchk+'</div>'+
+  '<h2 class="h center">Paid S$84.46</h2><p class="sub center">Amount actually charged \u00b7 from your USDC vault</p>'+
+  '<div class="lines"><div><span>Order</span><span>ORD-SG-1003</span></div><div><span>Item</span><span class="r">'+ITEMH+'</span></div><div><span>Merchant</span><span>anker.com.sg</span></div><div><span>Delivery</span><span>Standard, 3\u20135 days</span></div><div><span>Vault balance</span><span>250.00 \u2192 <span class="delta">165.54</span> USDC</span></div></div>'+
+  '<span class="k">Order status</span>'+
+  '<div class="steps"><div class="done"><i>'+ic.chk+'</i>Order placed with the merchant</div><div class="now"><i></i>Merchant confirming</div><div><i></i>Shipped</div><div><i></i>Delivered, 3\u20135 days</div></div>'+
+  '</div><div class="foot"><div class="btn">Done</div></div></div>'+hb()},
+ limit:function(){return sb()+'<div class="app"><div class="view">'+back('Home')+
+  '<h2 class="h">Spending limit</h2><p class="sub">The most Glance can spend on one purchase, delivery and GST included.</p>'+
+  '<div class="bigval">S$150.00</div>'+
+  '<div class="slider"><div class="tr"></div><div class="fl"></div><div class="th"></div></div>'+
+  '<div class="mrow"><span>S$50.00</span><span>S$300.00</span></div>'+
+  '<div class="presets"><span>S$50</span><span>S$100</span><span class="on">S$150</span><span>S$200</span><span>S$300</span></div>'+
+  '<p class="note">Above this, Glance stops and tells you why.</p>'+
+  '<div class="rowc"><div><strong>Approve every charge</strong><span>Always on. Glance can\u2019t pay without you.</span></div><span class="tog"></span></div>'+
+  '</div><div class="foot"><div class="btn">Save limit</div></div></div>'+hb()}
+};
+function quote(over){
+ var lim=over?'S$80.00':'S$150.00';
+ return sb()+'<div class="app"><div class="view">'+back('Results')+
+  '<h2 class="h">Anker Nano USB-C Hub</h2><p class="sub">'+nb('8-in-1')+' \u00b7 anker.com.sg</p>'+
+  (over?'<div class="alert">S$4.46 over your limit. Glance will not check out. Raise the limit or choose a cheaper option.</div>':'')+
+  '<span class="k">Delivery</span>'+
+  opt(true,'Standard delivery','3\u20135 days','S$5.00')+opt(false,'Express delivery','next day','S$12.00')+
+  '<div class="lines"><div><span>Item</span><span>S$72.90</span></div><div><span>Delivery</span><span>S$5.00</span></div><div><span>GST 9%</span><span>S$6.56</span></div><div><span>Total</span><span>S$84.46</span></div></div>'+
+  '<div class="meter"><div class="track"><div class="fill'+(over?' over':'')+'" style="width:'+(over?100:56)+'%"></div></div><div class="mrow"><span>'+(over?'S$4.46 over your limit':'S$65.54 under your limit')+'</span><span>Limit '+lim+'</span></div></div>'+
+  (over?'':'<p class="note">Price held by the merchant for 9:42.</p>')+
+  '</div><div class="foot"><div class="btn'+(over?' off':'')+'">Review and pay S$84.46</div>'+(over?'<div class="btn ghost">Change limit</div>':'')+'</div></div>'+hb();
+}
+
+// ---------- artboards ----------
+var SHOTS=[
+ {id:'home',bg:'blue',hl:'Your agent shops.<br>You approve.<br>Your stablecoins pay.',sl:'Glance finds it, prices it in full, and stops at your limit.'},
+ {id:'ask',bg:'light',hl:'Scan it. Say your limit.',sl:'A photo or one sentence is all Glance needs. The agent does the rest.'},
+ {id:'results',bg:'blue',hl:'Real merchants. Real prices.',sl:'Matches under your ceiling from live catalogues, with the best one picked for you.'},
+ {id:'quote',bg:'light',hl:'The full price, before checkout.',sl:'Item, delivery and GST from the merchant\u2019s live quote, checked against your limit.'},
+ {id:'blocked',bg:'dark',hl:'Over the limit? Glance stops.',sl:'No checkout, no charge. You see exactly how much over, and you decide what happens next.'},
+ {id:'approve',bg:'light',hl:'Every charge, approved by you.',sl:'On the payment provider\u2019s own page, inside the app. Glance never sees your card.'},
+ {id:'paid',bg:'blue',hl:'An honest receipt.',sl:'The amount actually charged, your order reference, and your vault balance after the spend.'},
+ {id:'limit',bg:'light',hl:'One number. You own it.',sl:'Set a per-purchase limit and every quote obeys it. Enforced in code, not left to the model.'}
+];
+function phone(id){return '<div class="ph"><span class="sbtn l" style="top:165px;height:30px"></span><span class="sbtn l" style="top:218px;height:62px"></span><span class="sbtn l" style="top:292px;height:62px"></span><span class="sbtn r" style="top:232px;height:100px"></span><div class="bez"><div class="scr">'+V[id]()+'</div></div></div>'}
+function art(s,n){return '<section class="art '+s.bg+'" id="shot-'+n+'" aria-label="Screenshot '+n+'"><div class="glow"></div><div class="cap"><h1 class="hl">'+s.hl+'</h1><p class="sl">'+s.sl+'</p></div><div class="phwrap">'+phone(s.id)+'</div></section>'}
+
+var Q=new URLSearchParams(location.search), n=+Q.get('shot');
+if(Q.get('sheet')){
+ document.body.className='contact';
+ document.body.innerHTML=SHOTS.map(function(s,i){return art(s,i+1)}).join('');
+}else if(n>=1&&n<=SHOTS.length){
+ document.body.className='shot';
+ document.body.innerHTML=art(SHOTS[n-1],n);
+ var fit=function(){document.documentElement.style.setProperty('--z',String(innerWidth/1290))};
+ fit();addEventListener('resize',fit);
+}else{
+ document.body.className='gallery';
+ document.body.innerHTML='<div><h1>Glance \u2014 App Store screenshots</h1><p>Eight 1290\u00d72796 artboards (6.7\u2033/6.9\u2033 iPhone). Click one to open it at full size, or add <code>?shot=N</code>. Export PNGs with <code>design/export-store-shots.sh</code>.</p></div>'+
+  '<div class="grid">'+SHOTS.map(function(s,i){return '<a class="cell" href="?shot='+(i+1)+'">'+art(s,i+1)+'<span>'+('0'+(i+1)).slice(-2)+' \u00b7 '+s.id+' \u00b7 1290\u00d72796</span></a>'}).join('')+'</div>';
+}
+})();
+</script>
+</body>
+</html>
