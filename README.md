@@ -17,7 +17,35 @@ Built in one evening at the **Reap × 65labs Agentic Buildathon**, Singapore, 9 
 
 [![Watch the demo](https://img.youtube.com/vi/vuL4Ya3pzrs/maxresdefault.jpg)](https://www.youtube.com/watch?v=vuL4Ya3pzrs)
 
-> **Live:** [aljabrialam.github.io/glance](https://aljabrialam.github.io/glance/) · **Interactive demo:** [open it](https://aljabrialam.github.io/glance/design/glance-app-mockup.html?play=1) (auto-plays the pitch; phone + Meta Display lens + live backend trace) · **Demo video (62 s, narrated):** [youtu.be/vuL4Ya3pzrs](https://youtu.be/vuL4Ya3pzrs) · **Product film:** [open it](https://aljabrialam.github.io/glance/design/glance-product-film.html) · **Voice-over script:** [`design/pitch-voiceover.md`](design/pitch-voiceover.md) · silent master: [`design/glance-pitch-62s.mp4`](design/glance-pitch-62s.mp4)
+## For judges — try it in two minutes
+
+| | |
+|---|---|
+| **Demo video (62 s, narrated)**<br>[youtu.be/vuL4Ya3pzrs](https://youtu.be/vuL4Ya3pzrs) | **Live site**<br>[aljabrialam.github.io/glance](https://aljabrialam.github.io/glance/) |
+| **GitHub repo**<br>[github.com/aljabrialam/glance](https://github.com/aljabrialam/glance) | **Pitch script, cue by cue**<br>[`design/pitch-voiceover.md`](design/pitch-voiceover.md) |
+
+<table>
+<tr>
+<td width="50%" valign="top">
+<a href="https://aljabrialam.github.io/glance/design/glance-app-mockup.html?play=1"><img src="design/thumbs/interactive-demo.png" alt="Interactive demo: phone, Meta Display lens, live backend trace"></a>
+<b><a href="https://aljabrialam.github.io/glance/design/glance-app-mockup.html?play=1">▶ Interactive demo</a></b> — auto-plays the 62 s pitch, then click anywhere. Phone on the left, Meta Display lens top right, and under it the backend: Reap Agentic API calls, Kwal vault reads, the limit rule, request/response JSON.
+</td>
+<td width="50%" valign="top">
+<a href="https://aljabrialam.github.io/glance/design/glance-app-mockup.html?scr=quote&limit=8000"><img src="design/thumbs/guardrail.png" alt="Guardrail: over-limit quote blocked before checkout"></a>
+<b><a href="https://aljabrialam.github.io/glance/design/glance-app-mockup.html?scr=quote&limit=8000">⛔ The guardrail</a></b> — straight to an over-limit quote: S$4.46 over, pay disabled, no checkout created, the glasses say "Checkout blocked. Nothing opened."
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<a href="https://aljabrialam.github.io/glance/design/glance-product-film.html"><img src="design/thumbs/product-film.png" alt="Product film: Meta Display glasses concept"></a>
+<b><a href="https://aljabrialam.github.io/glance/design/glance-product-film.html">👓 Product film (70 s)</a></b> — the Meta Display concept: look at it, say the limit, the agent prices it, you approve on your phone, paid from the USDC vault. Glasses view is simulated; the phone flow is built.
+</td>
+<td width="50%" valign="top">
+<a href="https://www.youtube.com/watch?v=vuL4Ya3pzrs"><img src="https://img.youtube.com/vi/vuL4Ya3pzrs/hqdefault.jpg" alt="Demo video on YouTube"></a>
+<b><a href="https://www.youtube.com/watch?v=vuL4Ya3pzrs">🎬 Demo video</a></b> — 62 s, narrated. Silent master in the repo: <a href="design/glance-pitch-62s.mp4"><code>design/glance-pitch-62s.mp4</code></a>.
+</td>
+</tr>
+</table>
 
 ---
 
