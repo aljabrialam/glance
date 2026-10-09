@@ -1,20 +1,27 @@
 import json
 import os
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse
-from pydantic import BaseModel
+from dotenv import load_dotenv
 
-from . import vault
-from .intent import parse_intent
-from .reap import ReapError, call
+load_dotenv(Path(__file__).resolve().parents[1] / ".env")
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
+
+from fastapi import FastAPI, HTTPException, Request  # noqa: E402
+from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+from fastapi.responses import HTMLResponse, JSONResponse  # noqa: E402
+from pydantic import BaseModel  # noqa: E402
+
+from . import vault  # noqa: E402
+from .intent import parse_intent  # noqa: E402
+from .limits import evaluate  # noqa: E402
+from .money import to_cents  # noqa: E402
+from .reap import ReapError, call  # noqa: E402
 
 app = FastAPI(title="Glance backend")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
-
 
 
 def public_url(request: Request) -> str:
@@ -25,28 +32,33 @@ def public_url(request: Request) -> str:
     host = request.headers.get("x-forwarded-host", request.headers.get("host", request.url.netloc))
     return f"{proto}://{host}"
 
-COUNTRY = os.environ.get("SHOP_COUNTRY", "US")
-CURRENCY = os.environ.get("SHOP_CURRENCY", "USD")
+
+COUNTRY = os.environ.get("SHOP_COUNTRY", "SG")
+CURRENCY = os.environ.get("SHOP_CURRENCY", "SGD")
 EMAIL = os.environ.get("BUYER_EMAIL", "demo@glance.app")
 SIMULATE = os.environ.get("REAP_SIMULATE_CHECKOUT", "COMPLETED")
 STATE_FILE = Path(os.environ.get("STATE_FILE", "/tmp/glance-state.json"))
+DEFAULT_LIMIT_CENTS = 15000
 
 SHIPPING_ADDRESS = {
     "firstName": os.environ.get("SHIP_FIRST_NAME", "Avery"),
     "lastName": os.environ.get("SHIP_LAST_NAME", "Tan"),
-    "phone": os.environ.get("SHIP_PHONE", "+14155550100"),
-    "addressLine1": os.environ.get("SHIP_LINE1", "1 Market St"),
-    "city": os.environ.get("SHIP_CITY", "San Francisco"),
-    "state": os.environ.get("SHIP_STATE", "CA"),
-    "postalCode": os.environ.get("SHIP_POSTAL", "94105"),
-    "country": os.environ.get("SHIP_COUNTRY", "US"),
+    "phone": os.environ.get("SHIP_PHONE", "+6591234567"),
+    "addressLine1": os.environ.get("SHIP_LINE1", "65 Mohamed Sultan Road"),
+    "city": os.environ.get("SHIP_CITY", "Singapore"),
+    "state": os.environ.get("SHIP_STATE", "Singapore"),
+    "postalCode": os.environ.get("SHIP_POSTAL", "239015"),
+    "country": os.environ.get("SHIP_COUNTRY", "SG"),
 }
 
 
 def _load() -> dict:
+    s = {"limitCents": DEFAULT_LIMIT_CENTS, "orders": [], "quotes": {}, "checkouts": {}, "enrollmentId": None}
     if STATE_FILE.exists():
-        return json.loads(STATE_FILE.read_text())
-    return {"limit": 150.0, "orders": [], "quotes": {}, "checkouts": {}, "enrollmentId": None}
+        s.update(json.loads(STATE_FILE.read_text()))
+    if "limit" in s:  # migrate float-era state
+        s["limitCents"] = to_cents(s.pop("limit")) or DEFAULT_LIMIT_CENTS
+    return s
 
 
 def _save(s: dict) -> None:
@@ -65,16 +77,6 @@ def enrollment_id() -> str | None:
 async def reap_error(_, e: ReapError):
     print(f"REAP ERROR {json.dumps(e.detail())}")
     return JSONResponse(status_code=502, content={"error": "reap", **e.detail()})
-
-
-def money(m) -> float | None:
-    if m is None:
-        return None
-    if isinstance(m, dict):
-        if "amount" in m and isinstance(m["amount"], dict):
-            return money(m["amount"])
-        return float(m.get("amount")) if m.get("amount") is not None else None
-    return float(m)
 
 
 @app.get("/health")
@@ -106,6 +108,23 @@ async def enroll(body: EnrollIn, request: Request):
     return data
 
 
+_enrollment_cache: dict = {"at": 0.0, "value": None}
+
+
+async def _enrollment() -> dict | None:
+    eid = enrollment_id()
+    if not eid:
+        return None
+    if _enrollment_cache["value"] and time.time() - _enrollment_cache["at"] < 60:
+        return _enrollment_cache["value"]
+    try:
+        value = await call("GET", f"/agentic/enrollments/{eid}")
+    except ReapError:
+        return _enrollment_cache["value"]
+    _enrollment_cache.update(at=time.time(), value=value)
+    return value
+
+
 @app.get("/api/enrollment")
 async def get_enrollment():
     eid = enrollment_id()
@@ -127,7 +146,7 @@ async def intent(body: IntentIn):
 
 class SearchIn(BaseModel):
     query: str
-    maxPrice: float | None = None
+    maxPriceCents: int | None = None
 
 
 def _product_out(p: dict) -> dict:
@@ -138,9 +157,9 @@ def _product_out(p: dict) -> dict:
         "name": p.get("name"),
         "merchant": (p.get("merchant") or {}).get("name"),
         "imageUrl": p.get("imageUrl"),
-        "price": money(pv.get("price")) or money(pr.get("min")),
-        "priceMax": money(pr.get("max")),
+        "priceCents": to_cents(pv.get("price")) or to_cents(pr.get("min")),
         "variantId": pv.get("id"),
+        "requiresShipping": True,
         "available": p.get("available", True),
     }
 
@@ -148,8 +167,8 @@ def _product_out(p: dict) -> dict:
 @app.post("/api/search")
 async def search(body: SearchIn):
     filters: dict = {"availability": "AVAILABLE_ONLY"}
-    if body.maxPrice:
-        filters["price"] = {"max": str(body.maxPrice)}
+    if body.maxPriceCents:
+        filters["price"] = {"max": f"{body.maxPriceCents // 100}.{body.maxPriceCents % 100:02d}"}
     data = await call(
         "POST",
         "/agentic/products/search",
@@ -164,13 +183,15 @@ async def search(body: SearchIn):
             if d and d.get("defaultVariant"):
                 dv = d["defaultVariant"]
                 p["variantId"] = dv.get("id") or p["variantId"]
-                p["price"] = money(dv.get("price")) or p["price"]
+                p["priceCents"] = to_cents(dv.get("price")) or p["priceCents"]
                 p["requiresShipping"] = dv.get("requiresShipping", True)
                 p["description"] = d.get("description")
-    # agent's pick: cheapest within budget, else cheapest
-    within = [p for p in products if p["price"] is not None and (body.maxPrice is None or p["price"] <= body.maxPrice)]
-    pick = min(within or products, key=lambda p: p["price"] or 1e9)["id"] if products else None
-    return {"searchId": data.get("id"), "products": products, "pickId": pick, "warnings": data.get("warnings", [])}
+    priced = [p for p in products if p["priceCents"] is not None]
+    within = [p for p in priced if body.maxPriceCents is None or p["priceCents"] <= body.maxPriceCents]
+    pick = min(within or priced or products, key=lambda p: p["priceCents"] if p["priceCents"] is not None else 10**12)["id"] if products else None
+    for i, p in enumerate(sorted(products, key=lambda p: (p["id"] != pick, p["priceCents"] if p["priceCents"] is not None else 10**12))):
+        p["rank"] = i
+    return {"searchId": data.get("id"), "products": products, "pickId": pick, "currency": CURRENCY, "warnings": data.get("warnings", [])}
 
 
 class QuoteIn(BaseModel):
@@ -182,24 +203,23 @@ class QuoteIn(BaseModel):
 
 def _quote_out(q: dict, meta: dict | None = None) -> dict:
     ab = q.get("amountBreakdown") or {}
-    total = money(ab.get("finalAmount"))
-    limit = float(STATE["limit"])
+    total = to_cents(ab.get("finalAmount"))
+    decision = evaluate(total, int(STATE["limitCents"])).to_dict() if total is not None else None
+    options = [
+        {"id": o.get("id"), "name": o.get("name"), "priceCents": to_cents(o.get("price")), "selected": bool(o.get("selected", False))}
+        for o in q.get("shippingOptions") or []
+    ]
     return {
         "quoteId": q.get("id"),
-        "shippingOptions": [
-            {"id": o.get("id"), "name": o.get("name"), "price": money(o.get("price")), "selected": o.get("selected", False)}
-            for o in q.get("shippingOptions") or []
-        ],
-        "subtotal": money(ab.get("itemsSubtotal")),
-        "shipping": money(ab.get("shipping")),
-        "tax": money(ab.get("tax")),
-        "discounts": sum(money(d) or 0 for d in ab.get("discounts") or []),
-        "total": total,
-        "currency": ((ab.get("finalAmount") or {}).get("currency")) or CURRENCY,
+        "shippingOptions": options,
+        "itemCents": to_cents(ab.get("itemsSubtotal")),
+        "shippingCents": to_cents(ab.get("shipping")),
+        "taxCents": to_cents(ab.get("tax")),
+        "discountCents": sum(to_cents(d) or 0 for d in ab.get("discounts") or []),
+        "totalCents": total,
+        "currency": ((ab.get("finalAmount") or {}).get("currency") if isinstance(ab.get("finalAmount"), dict) else None) or CURRENCY,
         "expiresAt": q.get("expiresAt"),
-        "limit": limit,
-        "overLimit": total is not None and total > limit,
-        "overBy": round(total - limit, 2) if total is not None and total > limit else 0,
+        "limit": decision,
         "item": (meta or {}).get("item"),
     }
 
@@ -215,14 +235,13 @@ async def quote(body: QuoteIn):
             req["shippingAddress"] = SHIPPING_ADDRESS
         q = await call("POST", "/agentic/quotes", req, idempotent=True)
         meta = {"variantId": body.variantId}
-        if body.shippingOptionId and body.shippingOptionId != next(
-            (o["id"] for o in q.get("shippingOptions") or [] if o.get("selected")), None
-        ):
+        selected = next((o["id"] for o in q.get("shippingOptions") or [] if o.get("selected")), None)
+        if body.shippingOptionId and body.shippingOptionId != selected:
             q = await call("POST", f"/agentic/quotes/{q['id']}/shipping-option", {"shippingOptionId": body.shippingOptionId})
     else:
         raise HTTPException(400, "variantId or quoteId+shippingOptionId required")
     out = _quote_out(q, meta)
-    STATE["quotes"][q["id"]] = {**meta, "total": out["total"]}
+    STATE["quotes"][q["id"]] = {**meta, "totalCents": out["totalCents"]}
     _save(STATE)
     return out
 
@@ -236,6 +255,16 @@ class ItemMeta(BaseModel):
 class CheckoutIn(BaseModel):
     quoteId: str
     item: ItemMeta | None = None
+    deliveryName: str | None = None
+
+
+def _expired(expires_at: str | None) -> bool:
+    if not expires_at:
+        return False
+    try:
+        return datetime.fromisoformat(expires_at.replace("Z", "+00:00")) <= datetime.now(timezone.utc)
+    except ValueError:
+        return False
 
 
 @app.post("/api/checkout")
@@ -245,16 +274,13 @@ async def checkout(body: CheckoutIn, request: Request):
         raise HTTPException(409, "no ACTIVE enrollment configured")
     q = await call("GET", f"/agentic/quotes/{body.quoteId}")
     out = _quote_out(q)
-    if out["overLimit"]:
-        raise HTTPException(403, f"total {out['total']} exceeds limit {out['limit']}")
-    if out["expiresAt"]:
-        from datetime import datetime, timezone
-
-        try:
-            if datetime.fromisoformat(out["expiresAt"].replace("Z", "+00:00")) <= datetime.now(timezone.utc):
-                raise HTTPException(410, "quote expired, re-quote")
-        except ValueError:
-            pass
+    if out["totalCents"] is None:
+        raise HTTPException(502, "quote has no final amount")
+    decision = evaluate(out["totalCents"], int(STATE["limitCents"]))
+    if not decision.allowed:
+        raise HTTPException(403, detail={"message": "total exceeds your per-purchase limit", **decision.to_dict()})
+    if _expired(out["expiresAt"]):
+        raise HTTPException(410, "quote expired, re-quote")
     extra = {"X-Simulate-Checkout": SIMULATE} if SIMULATE else None
     c = await call(
         "POST",
@@ -263,15 +289,17 @@ async def checkout(body: CheckoutIn, request: Request):
         idempotent=True,
         extra_headers=extra,
     )
+    bal = await vault.balance()
     STATE["checkouts"][c["id"]] = {
         "quoteId": body.quoteId,
         "item": body.item.model_dump() if body.item else None,
-        "total": out["total"],
-        "balanceBefore": (await vault.balance()).get("balance"),
+        "deliveryName": body.deliveryName,
+        "totalCents": out["totalCents"],
+        "balanceBeforeCents": bal.get("balanceCents"),
     }
     _save(STATE)
     na = c.get("nextAction") or {}
-    return {"checkoutId": c["id"], "status": c.get("status"), "approvalUrl": na.get("url"), "amount": money(c.get("amount"))}
+    return {"checkoutId": c["id"], "status": c.get("status"), "approvalUrl": na.get("url"), "amountCents": to_cents(c.get("amount"))}
 
 
 TERMINAL = {"COMPLETED", "FAILED", "CANCELED", "CANCELLED", "EXPIRED", "DECLINED"}
@@ -281,7 +309,7 @@ TERMINAL = {"COMPLETED", "FAILED", "CANCELED", "CANCELLED", "EXPIRED", "DECLINED
 async def checkout_status(cid: str):
     c = await call("GET", f"/agentic/checkouts/{cid}")
     status = c.get("status")
-    final = money(c.get("finalAmount"))
+    final = to_cents(c.get("finalAmount"))
     meta = STATE["checkouts"].get(cid, {})
     if status == "COMPLETED" and not any(o["checkoutId"] == cid for o in STATE["orders"]):
         STATE["orders"].insert(
@@ -289,8 +317,9 @@ async def checkout_status(cid: str):
             {
                 "checkoutId": cid,
                 "orderId": c.get("orderId"),
-                "finalAmount": final,
+                "finalAmountCents": final,
                 "item": meta.get("item"),
+                "deliveryName": meta.get("deliveryName"),
                 "at": int(time.time()),
             },
         )
@@ -300,40 +329,44 @@ async def checkout_status(cid: str):
         "status": status,
         "terminal": status in TERMINAL,
         "orderId": c.get("orderId"),
-        "finalAmount": final,
+        "finalAmountCents": final,
+        "currency": CURRENCY,
         "item": meta.get("item"),
-        "vaultBefore": meta.get("balanceBefore"),
-        "vaultAfter": bal.get("balance"),
+        "deliveryName": meta.get("deliveryName"),
+        "vaultBeforeCents": meta.get("balanceBeforeCents"),
+        "vaultAfterCents": bal.get("balanceCents"),
         "vaultSource": bal.get("source"),
-        "raw": c,
     }
 
 
 @app.get("/api/home")
 async def home():
     bal = await vault.balance()
+    enr = await _enrollment()
+    last4 = ((enr or {}).get("paymentMethod") or {}).get("last4") or os.environ.get("CARD_LAST4")
     return {
-        "vaultBalance": bal.get("balance"),
+        "vaultBalanceCents": bal.get("balanceCents"),
         "vaultSource": bal.get("source"),
         "vaultAddress": bal.get("vaultAddress"),
-        "cardLast4": bal.get("cardLast4") or os.environ.get("CARD_LAST4", "4242"),
-        "limit": STATE["limit"],
+        "cardLast4": last4,
+        "currency": CURRENCY,
+        "limitCents": STATE["limitCents"],
         "orders": STATE["orders"][:20],
-        "enrollmentId": enrollment_id(),
+        "enrollmentActive": (enr or {}).get("status") == "ACTIVE",
     }
 
 
 class LimitIn(BaseModel):
-    perPurchase: float
+    perPurchaseCents: int
 
 
 @app.put("/api/limit")
 async def set_limit(body: LimitIn):
-    if body.perPurchase <= 0:
+    if body.perPurchaseCents <= 0:
         raise HTTPException(400, "limit must be positive")
-    STATE["limit"] = round(body.perPurchase, 2)
+    STATE["limitCents"] = body.perPurchaseCents
     _save(STATE)
-    return {"limit": STATE["limit"]}
+    return {"limitCents": STATE["limitCents"]}
 
 
 @app.get("/done", response_class=HTMLResponse)

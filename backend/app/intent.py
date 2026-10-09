@@ -4,23 +4,25 @@ import re
 
 import httpx
 
+from .money import to_cents
+
 PROMPT = (
     "Extract a shopping intent from the user's sentence. Reply with JSON only: "
-    '{"query": <short product search query>, "maxPrice": <number in USD or null>}.'
+    '{"query": <short product search query>, "maxPrice": <number in Singapore dollars, e.g. 150, or null>}.'
 )
 
 
 def regex_parse(text: str) -> dict:
-    m = re.search(r"(?:under|below|less than|max(?:imum)?|up to|<)\s*\$?\s*(\d+(?:\.\d+)?)", text, re.I) or re.search(
-        r"\$\s*(\d+(?:\.\d+)?)", text
+    m = re.search(r"(?:under|below|less than|max(?:imum)?|up to|<)\s*(?:S\$|SGD|\$)?\s*(\d+(?:\.\d+)?)", text, re.I) or re.search(
+        r"(?:S\$|SGD|\$)\s*(\d+(?:\.\d+)?)", text
     )
-    max_price = float(m.group(1)) if m else None
+    max_price = to_cents(m.group(1)) if m else None
     query = text
     if m:
         query = text[: m.start()] + text[m.end():]
     query = re.sub(r"^\s*(please\s+)?(buy|get|find|order|purchase)(\s+me)?\s+", "", query, flags=re.I)
     query = re.sub(r"\b(for|,|and)\s*$", "", query.strip(" ,.")).strip(" ,.")
-    return {"query": query or text, "maxPrice": max_price}
+    return {"query": query or text, "maxPriceCents": max_price}
 
 
 async def _llm(text: str, key: str) -> dict:
@@ -52,7 +54,7 @@ async def _llm(text: str, key: str) -> dict:
             out = r.json()["choices"][0]["message"]["content"]
     data = json.loads(out[out.find("{"): out.rfind("}") + 1])
     mp = data.get("maxPrice")
-    return {"query": str(data["query"]), "maxPrice": float(mp) if mp is not None else None}
+    return {"query": str(data["query"]), "maxPriceCents": to_cents(mp) if mp is not None else None}
 
 
 async def parse_intent(text: str) -> dict:

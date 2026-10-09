@@ -16,10 +16,10 @@ def _kwal_balance() -> dict | None:
 
     creds = CredentialStore(resolve_credentials_path()).load()
     if creds.is_expired(int(time.time())):
-        return {"balance": None, "source": "kwal", "error": "Kwal session expired"}
+        return {"balanceCents": None, "source": "kwal", "error": "Kwal session expired"}
     f = read_funding(creds.service_url, creds.token)
-    bal = f.available.minor_units / 10 ** f.available.decimals if f.available else 0.0
-    return {"balance": bal, "source": "kwal", "state": f.state, "vaultAddress": f.vault_address}
+    cents = f.available.minor_units * 100 // 10 ** f.available.decimals if f.available else 0
+    return {"balanceCents": cents, "source": "kwal", "state": f.state, "vaultAddress": f.vault_address}
 
 
 async def balance() -> dict:
@@ -30,9 +30,9 @@ async def balance() -> dict:
     try:
         value = await asyncio.to_thread(_kwal_balance)
     except Exception as e:  # surface, then fall back
-        value = {"balance": None, "source": "kwal", "error": str(e)}
-    if value is None or value.get("balance") is None:
-        mock = {"balance": float(os.environ.get("MOCK_VAULT_BALANCE", "250.00")), "source": "mock"}
+        value = {"balanceCents": None, "source": "kwal", "error": str(e)}
+    if value is None or value.get("balanceCents") is None:
+        mock = {"balanceCents": int(os.environ.get("MOCK_VAULT_BALANCE_CENTS", "25000")), "source": "mock"}
         if value and value.get("error"):
             mock["kwalError"] = value["error"]
         value = mock
