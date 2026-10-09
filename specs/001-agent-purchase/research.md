@@ -40,6 +40,14 @@
 
 Each row is a curl in `scripts/happy_path.sh` or a one-off noted here with the real response.
 
+### Observed live (2026-10-09 17:4x SGT, SG/SGD, real key)
+- `Reap-Version: 2025-02-14` accepted. Search, details, quote all 200 on the first try.
+- Search "Anker Nano USB-C Hub 8-in-1" (SG/SGD, max 150.00) returned 2 Anker hubs at 35.99 and 26.90 SGD. The exact sheet product was not in the top results; any returned Anker hub is fine for the demo.
+- Amounts are JSON **numbers**, not strings: `{"amount": 35.99, "currency": "SGD"}`. `tax` is double-nested: `{"amount": {"amount": 0, "currency": "SGD"}}`. `money.to_cents` handles both via `str()` → `Decimal`.
+- `merchant.name` is the placeholder `"---"` in the sandbox; the app shows "Merchant via Reap" when the name is missing or `---`.
+- Quote: one shipping option (`ship_0` "Free Shipping", selected). `expiresAt` ≈ 10 minutes after creation.
+- Details response includes long `description`; unused by the UI.
+
 ## R6. Approval UX on device
 
 - **Decision**: `react-native-webview` inside the app for the hosted page; detect `PUBLIC_URL/done` or `glance://done` and then poll `/api/checkout/:id`. On web, `Approve.web.tsx` opens a popup and listens for `postMessage`.

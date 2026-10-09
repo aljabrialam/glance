@@ -149,13 +149,17 @@ class SearchIn(BaseModel):
     maxPriceCents: int | None = None
 
 
+def _merchant(name) -> str | None:
+    return None if not name or str(name).strip("-— ") == "" else name
+
+
 def _product_out(p: dict) -> dict:
     pv = p.get("previewVariant") or {}
     pr = p.get("priceRange") or {}
     return {
         "id": p.get("id"),
         "name": p.get("name"),
-        "merchant": (p.get("merchant") or {}).get("name"),
+        "merchant": _merchant((p.get("merchant") or {}).get("name")),
         "imageUrl": p.get("imageUrl"),
         "priceCents": to_cents(pv.get("price")) or to_cents(pr.get("min")),
         "variantId": pv.get("id"),

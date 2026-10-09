@@ -188,7 +188,7 @@ export default function App() {
             {p.imageUrl ? <Image source={{ uri: p.imageUrl }} style={s.thumb} resizeMode="contain" /> : null}
             <View style={{ flex: 1, gap: 4 }}>
               <Text style={s.nm} numberOfLines={2}>{p.name}</Text>
-              <Text style={s.small}>{p.merchant}</Text>
+              <Text style={s.small}>{p.merchant ?? 'Merchant via Reap'}</Text>
               {p.id === agentPick ? <Text style={s.pill}>Agent's pick</Text> : null}
             </View>
             <Text style={s.pr}>{money(p.priceCents)}</Text>
@@ -212,7 +212,7 @@ export default function App() {
       <Back to="results" label="Results" go={go} />
       {toast ? <View style={s.toast}><Text style={s.toastText}>{toast}</Text></View> : null}
       <Text style={s.h}>{product?.name}</Text>
-      <Text style={s.sub}>{product?.merchant}</Text>
+      <Text style={s.sub}>{product?.merchant ?? 'Merchant via Reap'}</Text>
       {!q && quoting && <View style={{ padding: 24 }}><ActivityIndicator color={C.accent} /><Text style={[s.note, { textAlign: 'center', marginTop: 8 }]}>Getting the merchant's live price…</Text></View>}
       {q && (<>
         {over && <View style={s.alert}><Text style={s.alertText}>{money(q.limit?.overByCents)} over your limit. Glance will not check out. Pick cheaper shipping or raise the limit.</Text></View>}
@@ -269,7 +269,7 @@ export default function App() {
       <View style={s.lines}>
         <View style={s.line}><Text style={s.lineText}>Order</Text><Text style={s.lineText} numberOfLines={1}>{paid.orderId ?? '—'}</Text></View>
         <View style={s.line}><Text style={s.lineText}>Item</Text><Text style={[s.lineText, { flex: 1, textAlign: 'right', marginLeft: 12 }]} numberOfLines={1}>{product?.name}</Text></View>
-        <View style={s.line}><Text style={s.lineText}>Merchant</Text><Text style={s.lineText}>{product?.merchant}</Text></View>
+        <View style={s.line}><Text style={s.lineText}>Merchant</Text><Text style={s.lineText}>{product?.merchant ?? 'Merchant via Reap'}</Text></View>
         {paid.deliveryName ? <View style={s.line}><Text style={s.lineText}>Delivery</Text><Text style={s.lineText}>{paid.deliveryName}</Text></View> : null}
         <View style={[s.line, { borderBottomWidth: 0 }]}><Text style={s.lineTotal}>Vault balance{mockVault ? ' (mock)' : ''}</Text><Text style={s.lineTotal}>{usdc(after)} USDC</Text></View>
       </View>
