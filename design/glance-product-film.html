@@ -41,7 +41,9 @@ h1{font-family:var(--display);font-weight:700;font-size:28px;color:var(--paper);
 .pair{display:flex;justify-content:space-between;gap:1cqw;font-family:var(--body);font-weight:500;font-size:1.7cqw;color:var(--mist);font-variant-numeric:tabular-nums}
 .track{height:1cqw;border-radius:1cqw;background:var(--line);overflow:hidden}
 .fill{height:100%;width:0;background:var(--mint);border-radius:1cqw}
-.ok{color:var(--mint)} .am{color:var(--amber)}
+.ok{color:var(--mint)} .am{color:var(--amber)} .bad{color:var(--alert)}
+.fill.over{background:var(--alert)}
+.stage.is-late .offer.best.block{border-color:var(--alert);color:var(--alert)}
 .check{display:flex;align-items:center;gap:1cqw;font-size:2.4cqw}
 .check i{width:1.4cqw;height:1.4cqw;border-radius:50%;background:currentColor;flex:none}
 .wave{display:flex;align-items:center;gap:.5cqw;height:3cqw}
@@ -59,9 +61,25 @@ h1{font-family:var(--display);font-weight:700;font-size:28px;color:var(--paper);
 .phone .pr{font-size:1.45cqw;padding-top:1cqw;border-top:1px solid #C5CCDA}
 .phone .pr strong{display:block;font-size:1.6cqw}
 .phone .pb{margin-top:auto;background:#2343E0;color:#fff;border-radius:1cqw;padding:1.1cqw;text-align:center;font-weight:600;font-size:1.6cqw}
+.phone.right{left:auto;right:6cqw}
+.phone .pb.ghost{background:transparent;color:#2343E0;border:1px solid #C5CCDA;margin-top:0}
+.phone .pb.off{background:#C5CCDA;color:#566076}
+.phone .vf{flex:1;position:relative;border-radius:1cqw;background:linear-gradient(180deg,#2B3550,#131928);overflow:hidden;display:flex;align-items:flex-start;justify-content:center;padding-top:3cqw}
+.phone .vf:before{content:'';position:absolute;inset:1.4cqw;border:.25cqw solid rgba(169,184,255,.9);border-radius:.6cqw;clip-path:polygon(0 0,22% 0,22% 7%,7% 7%,7% 22%,0 22%,0 100%,22% 100%,22% 93%,7% 93%,7% 78%,0 78%,0 0,100% 0,100% 22%,93% 22%,93% 7%,78% 7%,78% 0,100% 0,100% 100%,78% 100%,78% 93%,93% 93%,93% 78%,100% 78%,100% 0)}
+.phone .vf .hub{width:46%;height:28%;background:#E3E8F2;border-radius:.6cqw;box-shadow:0 .4cqw 1cqw rgba(0,0,0,.5);position:relative}
+.phone .vf .hub:after{content:'';position:absolute;left:12%;right:12%;bottom:18%;height:18%;background:repeating-linear-gradient(90deg,#1B2130 0 14%,transparent 14% 24%)}
+.phone .vf .tagid{position:absolute;left:1.4cqw;right:1.4cqw;bottom:1.4cqw;background:rgba(9,13,22,.85);color:var(--hud);font-family:var(--display);font-weight:700;font-size:1.15cqw;padding:.6cqw .8cqw;border-radius:.5cqw;line-height:1.2}
+.phone .pm{font-size:1.3cqw;color:#566076}
+.phone .pmeter{height:.7cqw;border-radius:.7cqw;background:#D7DDE8;overflow:hidden}.phone .pmeter i{display:block;height:100%;background:#B3261E;width:100%}
+.phone .palert{background:#FBE2E0;color:#B3261E;border-radius:.8cqw;padding:.8cqw;font-size:1.3cqw;font-weight:600;line-height:1.3}
+.ways{display:grid;grid-template-columns:1fr 1fr;gap:2cqw;width:100%;text-align:left;margin-top:.6cqw}
+.way{background:var(--ink);border:1px solid var(--line);border-radius:1.2cqw;padding:1.6cqw;display:flex;flex-direction:column;gap:.6cqw}
+.way h3{margin:0;font-family:var(--display);font-weight:700;font-size:2.6cqw;color:var(--paper)}.way p{margin:0;font-size:1.5cqw;color:var(--mist);line-height:1.35}
+.way .st{font-size:1.15cqw;letter-spacing:.14em;text-transform:uppercase;font-weight:600}.st.b{color:var(--mint)}.st.c{color:var(--amber)}
+.kbd{color:var(--dim);font-size:13px}
 
 /* cards */
-.card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.8cqw;background:radial-gradient(ellipse at 50% 40%,rgba(20,26,39,.82),rgba(6,9,15,.97));text-align:center;padding:4cqw}
+.card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.8cqw;background:radial-gradient(ellipse at 50% 40%,rgba(20,26,39,.97),rgba(6,9,15,.995));text-align:center;padding:4cqw}
 .mark{font-family:var(--display);font-weight:700;font-size:10cqw;line-height:.9;color:var(--paper)}
 .tag{font-size:2.4cqw;color:var(--hud);font-weight:500}
 .subt{font-size:1.6cqw;color:var(--mist)}
@@ -87,9 +105,10 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
 </style>
 
 <div class="wrap">
-  <h1>Glance on Meta Display</h1>
+  <h1>Glance — product film</h1>
+  <p class="note">Your agent shops. You approve. Your stablecoins pay. Two ways to see a product: Meta Display glasses (concept) or the phone camera (built). Click a chapter or press <b>space</b> / <b>←</b> / <b>→</b>.</p>
 
-  <div class="stage" id="stage" aria-label="Animated product concept, 55 seconds">
+  <div class="stage" id="stage" aria-label="Animated product concept, 70 seconds">
     <svg class="scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <defs>
         <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B3550"/><stop offset="1" stop-color="#131928"/></linearGradient>
@@ -104,15 +123,16 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
       <rect x="70" y="420" width="150" height="180" rx="6" fill="#39445C"/>
       <rect x="92" y="446" width="106" height="60" rx="4" fill="#55617C"/>
       <rect x="236" y="470" width="120" height="130" rx="6" fill="#2F3A52"/>
-      <!-- headphones on a stand -->
-      <rect x="612" y="330" width="16" height="262" fill="#59647E"/>
-      <ellipse cx="620" cy="596" rx="92" ry="12" fill="#59647E"/>
-      <path d="M512 452 A108 108 0 0 1 728 452" fill="none" stroke="#E3E8F2" stroke-width="24" stroke-linecap="round"/>
-      <rect x="482" y="440" width="62" height="118" rx="26" fill="#1B2130" stroke="#E3E8F2" stroke-width="5"/>
-      <rect x="696" y="440" width="62" height="118" rx="26" fill="#1B2130" stroke="#E3E8F2" stroke-width="5"/>
+      <!-- USB-C hub box on the shelf -->
+      <rect x="500" y="380" width="240" height="220" rx="8" fill="#F1F3F8"/>
+      <rect x="500" y="380" width="240" height="46" rx="8" fill="#1B2130"/>
+      <text x="620" y="412" text-anchor="middle" font-family="Bricolage Grotesque, Arial" font-weight="700" font-size="26" fill="#F1F3F8" letter-spacing="4">ANKER</text>
+      <rect x="536" y="462" width="168" height="54" rx="10" fill="#C8D0E0"/>
+      <rect x="548" y="476" width="18" height="26" rx="3" fill="#1B2130"/><rect x="574" y="476" width="18" height="26" rx="3" fill="#1B2130"/><rect x="600" y="476" width="18" height="26" rx="3" fill="#1B2130"/><rect x="626" y="476" width="30" height="26" rx="3" fill="#1B2130"/><rect x="664" y="476" width="28" height="26" rx="3" fill="#1B2130"/>
+      <text x="620" y="556" text-anchor="middle" font-family="IBM Plex Sans, Arial" font-weight="600" font-size="18" fill="#141A27">Nano USB-C Hub · 8-in-1</text>
       <!-- shelf price tag -->
       <rect x="548" y="634" width="144" height="56" rx="6" fill="#F1F3F8"/>
-      <text x="620" y="672" text-anchor="middle" font-family="Bricolage Grotesque, Arial" font-weight="700" font-size="34" fill="#141A27">$149.00</text>
+      <text x="620" y="672" text-anchor="middle" font-family="Bricolage Grotesque, Arial" font-weight="700" font-size="34" fill="#141A27">S$89.00</text>
       <!-- right-hand shelf items, mostly behind the HUD -->
       <rect x="880" y="450" width="130" height="150" rx="6" fill="#39445C"/>
       <rect x="1030" y="400" width="170" height="200" rx="6" fill="#2F3A52"/>
@@ -123,9 +143,9 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
       <rect x="760" y="730" width="220" height="130" rx="6" fill="#2F3A52"/>
 
       <!-- detection brackets -->
-      <g class="sc" data-on="see find" fill="none" stroke="#A9B8FF" stroke-width="4">
+      <g class="sc" data-on="see scan find" fill="none" stroke="#A9B8FF" stroke-width="4">
         <path d="M452 350 V320 H482 M758 320 H788 V350 M788 548 V578 H758 M482 578 H452 V548"/>
-        <text x="452" y="304" stroke="none" fill="#A9B8FF" font-family="Bricolage Grotesque, Arial" font-weight="700" font-size="26">SONY WH-1000XM5</text>
+        <text x="452" y="304" stroke="none" fill="#A9B8FF" font-family="Bricolage Grotesque, Arial" font-weight="700" font-size="26">ANKER NANO USB-C HUB 8-IN-1</text>
       </g>
       <g class="sc" data-on="find quote">
         <rect x="536" y="626" width="168" height="72" rx="10" fill="none" stroke="#FFC46B" stroke-width="4" stroke-dasharray="10 8"/>
@@ -133,43 +153,54 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
       </g>
     </svg>
 
-    <div class="lens sc" data-on="see find quote confirm paid"></div>
-    <div class="cap sc" data-on="see find quote confirm paid" id="cap"></div>
+    <div class="lens sc" data-on="see scan find quote block confirm paid"></div>
+    <div class="cap sc" data-on="see scan find quote block confirm paid" id="cap"></div>
 
-    <div class="hud sc" data-on="see find quote confirm paid">
+    <div class="hud sc" data-on="see find quote block confirm paid">
       <div class="view sc" data-on="see">
         <div class="k">Listening</div>
         <div class="wave"><b></b><b></b><b></b><b></b><b></b><b></b></div>
-        <div class="say">"Find me the best price for these, under 150."</div>
+        <div class="say">"Find me the best price for this, under S$150."</div>
         <div class="rule late">
           <div class="k">Understood</div>
-          <div class="mid">Sony WH-1000XM5</div>
-          <div class="sm">Limit $150 per purchase</div>
+          <div class="mid">Anker Nano USB-C Hub 8-in-1</div>
+          <div class="sm">Limit S$150 per purchase</div>
         </div>
       </div>
       <div class="view sc" data-on="find">
         <div class="k">Searching merchants</div>
-        <div class="offer best">$129 <span>Audiohub · Black</span></div>
-        <div class="offer">$139 <span>SoundCart · Silver</span></div>
-        <div class="offer">$149 <span>This shelf</span></div>
+        <div class="offer best">S$72.90 <span>anker.com.sg · Agent's pick</span></div>
+        <div class="offer">S$79.00 <span>Marketplace · 3rd party</span></div>
+        <div class="offer">S$89.00 <span>This shelf</span></div>
         <div class="rule late">
-          <div class="check ok"><i></i>$20 less than the shelf</div>
+          <div class="check ok"><i></i>S$16.10 less than the shelf</div>
           <div class="sm">Getting the full price with shipping and tax</div>
         </div>
       </div>
       <div class="view sc" data-on="quote">
-        <div class="k">Quote · Audiohub</div>
-        <div class="big">$134</div>
-        <div class="pair"><span>Item 129 · Shipping 5 · Tax 5</span></div>
+        <div class="k">Quote · anker.com.sg</div>
+        <div class="big">S$84<small>.46</small></div>
+        <div class="pair"><span>Item 72.90 · Shipping 5.00 · GST 6.56</span></div>
         <div class="rule">
           <div class="track"><div class="fill" id="bfill"></div></div>
-          <div class="pair"><span>Your limit</span><span>$150</span></div>
-          <div class="check ok late"><i></i>$16 under your limit</div>
+          <div class="pair"><span>Your limit</span><span>S$150</span></div>
+          <div class="check ok late"><i></i>S$65.54 under your limit</div>
+        </div>
+      </div>
+      <div class="view sc" data-on="block">
+        <div class="k">Same quote · limit set to S$80</div>
+        <div class="big bad">S$4<small>.46</small></div>
+        <div class="pair"><span>over your limit</span><span>Total S$84.46</span></div>
+        <div class="rule">
+          <div class="track"><div class="fill over" style="width:100%"></div></div>
+          <div class="pair"><span>Your limit</span><span>S$80</span></div>
+          <div class="check bad late"><i></i>Checkout blocked. Nothing opened.</div>
+          <div class="sm late">Raise the limit or pick cheaper shipping. The rule runs before any checkout, every time.</div>
         </div>
       </div>
       <div class="view sc" data-on="confirm">
         <div class="k">Confirm</div>
-        <div class="mid">Buy for $134?</div>
+        <div class="mid">Buy for S$84.46?</div>
         <div class="sm">Pinch to send it to your phone</div>
         <div class="rule late">
           <div class="check am"><i></i>Waiting for you</div>
@@ -178,8 +209,8 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
       </div>
       <div class="view sc" data-on="paid">
         <div class="k">Paid from your USDC vault</div>
-        <div class="big ok">$134</div>
-        <div class="pair"><span>Order 12345</span><span>Arrives Friday</span></div>
+        <div class="big ok">S$84<small>.46</small></div>
+        <div class="pair"><span>Order ORD-SG-1003</span><span>Standard · 3-5 days</span></div>
         <div class="rule">
           <div class="k">Vault balance</div>
           <div class="mid"><span id="vault">250.00</span> USDC</div>
@@ -194,10 +225,26 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
     </div>
     <div class="phone sc" data-on="confirm">
       <div class="pk">Hosted approval page</div>
-      <div class="pa">$134.00</div>
-      <div class="pr"><strong>Sony WH-1000XM5</strong>Audiohub · Standard shipping</div>
-      <div class="pr"><strong>Card •••• 7797</strong>Backed by your USDC vault</div>
+      <div class="pa">S$84.46</div>
+      <div class="pr"><strong>Anker Nano USB-C Hub 8-in-1</strong>anker.com.sg · Standard delivery</div>
+      <div class="pr"><strong>Card •••• 4242</strong>Backed by your USDC vault</div>
       <div class="pb">Approve</div>
+      <div class="pb ghost">Decline — nothing is charged</div>
+    </div>
+    <div class="phone right sc" data-on="scan">
+      <div class="pk">Glance · Scan the product</div>
+      <div class="vf"><div class="hub"></div><div class="tagid late">Anker Nano USB-C Hub (8-in-1)<br><span style="font-weight:500;color:#C8D0E0">identified from the photo</span></div></div>
+      <div class="pm">Add a limit, e.g. under S$150 (optional)</div>
+      <div class="pb">Find it</div>
+    </div>
+    <div class="phone sc" data-on="block">
+      <div class="pk">Glance · Quote</div>
+      <div class="pa">S$84.46</div>
+      <div class="palert">S$4.46 over your limit. Glance will not check out.</div>
+      <div class="pmeter"><i></i></div>
+      <div class="pm">Limit S$80 · Item 72.90 · Shipping 5.00 · GST 6.56</div>
+      <div class="pb off">Review and pay</div>
+      <div class="pb ghost">Change limit</div>
     </div>
 
     <div class="card sc" data-on="title">
@@ -212,7 +259,10 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
         <div class="col"><span class="k">The purchase</span><h3>Reap Agentic API</h3><p>Finds the product, prices the order and checks out. You approve every charge.</p></div>
         <div class="col"><span class="k">The money</span><h3>Kwal USDC vault</h3><p>Stablecoins in a wallet you own back the card payment at a real merchant.</p></div>
       </div>
-      <div class="subt">The glasses show the same flow at a glance. The phone does the work.</div>
+      <div class="ways">
+        <div class="way"><span class="st b">Built · runs tonight</span><h3>Phone camera</h3><p>Point the Glance app at a product or type one sentence. The agent identifies it, prices it, checks your limit, and hands you Reap's approval page.</p></div>
+        <div class="way"><span class="st c">Concept · this film</span><h3>Meta Display glasses</h3><p>The same agent and the same rules, shown as a glance. Approval still happens on your phone. Not built — glasses have no third-party HUD yet.</p></div>
+      </div>
     </div>
     <div class="card sc" data-on="end">
       <div class="mark">Glance</div>
@@ -226,25 +276,27 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-
   <div class="bar">
     <button id="play">Pause</button>
     <button id="restart" class="ghost">Restart</button>
-    <input id="seek" type="range" min="0" max="55" step="0.1" value="0" aria-label="Position in film">
-    <output id="time">0:00 / 0:55</output>
+    <input id="seek" type="range" min="0" max="70" step="0.1" value="0" aria-label="Position in film">
+    <output id="time">0:00 / 1:10</output>
   </div>
   <div class="scenes" id="scenes"></div>
-  <p class="note">The glasses view is a concept animation. The purchase itself runs in the Glance mobile app against the Reap sandbox, with test USDC in a Kwal vault. Product, merchants and prices are sample data.</p>
+  <p class="note">The glasses view is a concept animation. The phone screens mirror the built Glance app, which runs against the Reap sandbox (Singapore, SGD); the USDC vault balance is a labelled mock until the Kwal vault is live. Merchants and prices shown are sample data; nothing is really bought or shipped.</p>
 </div>
 
 <script>
 (function(){
 var SC=[
  {id:'title',at:0,name:'Title',cap:''},
- {id:'see',at:5,name:'See it, say it',cap:'Look at it. Ask for it.'},
- {id:'find',at:12,name:'Find the price',cap:'The agent searches merchants'},
- {id:'quote',at:19,name:'Quote vs limit',cap:'Real total, checked against your limit'},
- {id:'confirm',at:27,name:'Confirm',cap:'You approve on your phone'},
- {id:'paid',at:35,name:'Paid',cap:'Paid from stablecoins'},
- {id:'how',at:42,name:'How it works',cap:''},
- {id:'end',at:50,name:'End card',cap:''}
-],DUR=55;
+ {id:'see',at:5,name:'See it, say it',cap:'On the glasses: look at it, ask for it.'},
+ {id:'scan',at:12,name:'Or scan with the phone',cap:'No glasses? Point the phone at it.'},
+ {id:'find',at:19,name:'Find the price',cap:'The agent searches merchants via Reap'},
+ {id:'quote',at:26,name:'Quote vs limit',cap:'Real total, checked against your limit'},
+ {id:'block',at:33,name:'Over the limit',cap:'Over the limit? Glance stops before checkout.'},
+ {id:'confirm',at:41,name:'Confirm',cap:'You approve on Reap\u2019s page, on your phone'},
+ {id:'paid',at:49,name:'Paid',cap:'The amount actually charged, from your USDC vault'},
+ {id:'how',at:56,name:'How it works',cap:''},
+ {id:'end',at:64,name:'End card',cap:''}
+],DUR=70;
 var stage=document.getElementById('stage'),seek=document.getElementById('seek'),out=document.getElementById('time'),
     playB=document.getElementById('play'),cap=document.getElementById('cap'),list=document.getElementById('scenes'),
     bfill=document.getElementById('bfill'),vault=document.getElementById('vault');
@@ -260,7 +312,7 @@ function show(){
   if(i!==cur){cur=i;els.forEach(function(p){p[0].classList.toggle('on',p[1].indexOf(s.id)>-1)});cap.textContent=s.cap;btns.forEach(function(b,k){b.setAttribute('aria-current',k===i)})}
   stage.classList.toggle('is-late',loc/(end-s.at)>.45);
   bfill.style.width=(s.id==='quote'?clamp(loc/2.5)*89.3:89.3)+'%';
-  vault.textContent=(250-134*(s.id==='paid'?clamp((loc-1)/2.5):0)).toFixed(2);
+  vault.textContent=(250-84.46*(s.id==='paid'?clamp((loc-1)/2.5):0)).toFixed(2);
   seek.value=t;out.textContent=fmt(t)+' / '+fmt(DUR);
 }
 function setPlay(p){playing=p;playB.textContent=p?'Pause':(t>=DUR?'Replay':'Play');if(p){last=performance.now();requestAnimationFrame(tick)}}
@@ -269,8 +321,16 @@ playB.addEventListener('click',function(){if(!playing&&t>=DUR)t=0;setPlay(!playi
 document.getElementById('restart').addEventListener('click',function(){t=0;show();setPlay(true)});
 seek.addEventListener('input',function(){t=+seek.value;show();if(!playing)playB.textContent=t>=DUR?'Replay':'Play'});
 list.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;t=SC[+b.dataset.i].at+.01;show();if(!playing)playB.textContent='Play'});
+document.addEventListener('keydown',function(e){
+  if(e.target.tagName==='INPUT')return;
+  if(e.key===' '){e.preventDefault();if(!playing&&t>=DUR)t=0;setPlay(!playing)}
+  else if(e.key==='ArrowRight'){t=SC[Math.min(SC.length-1,cur+1)].at+.01;show()}
+  else if(e.key==='ArrowLeft'){t=SC[Math.max(0,cur-1)].at+.01;show()}
+  else if(e.key==='Home'){t=0;show()}
+});
+var qs=new URLSearchParams(location.search);if(qs.get('t'))t=Math.max(0,Math.min(DUR,+qs.get('t')));
 show();
 var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-setPlay(!reduce);
+setPlay(!reduce&&!qs.has('pause'));
 })();
 </script>
