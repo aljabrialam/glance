@@ -45,11 +45,22 @@ Built in one evening at the **Reap × 65labs Agentic Buildathon**, Singapore, 9 
 <b><a href="https://www.youtube.com/watch?v=vuL4Ya3pzrs">🎬 Demo video</a></b> — 62 s, narrated. Silent master in the repo: <a href="design/glance-pitch-62s.mp4"><code>design/glance-pitch-62s.mp4</code></a>.
 </td>
 </tr>
+</table>
+
+<b><a href="https://aljabrialam.github.io/glance/design/glance-app-store.html">📱 App Store screenshots</a></b> — the shipped look: eight 1290×2796 panels, home to spending limit. Click a panel for the full-size PNG in <a href="design/app-store/1290x2796"><code>design/app-store/</code></a>; source <code>design/glance-app-store.html</code>, regenerate with <code>design/export-store-shots.sh</code>.
+
+<table>
 <tr>
-<td colspan="2" valign="top">
-<a href="https://aljabrialam.github.io/glance/design/glance-app-store.html"><img src="design/thumbs/app-store.png" alt="App Store screenshots: eight 1290x2796 panels, home to spending limit"></a>
-<b><a href="https://aljabrialam.github.io/glance/design/glance-app-store.html">📱 App Store screenshots</a></b> — the shipped look: eight 1290×2796 panels (home, scan, results, quote, over-limit block, approval, receipt, limit) in <a href="design/app-store/1290x2796"><code>design/app-store/</code></a>. Source is <code>design/glance-app-store.html</code>; regenerate with <code>design/export-store-shots.sh</code>.
-</td>
+<td width="25%"><a href="design/app-store/1290x2796/01-home.png"><img src="design/thumbs/app-store/01-home.png" alt="Home: USDC vault, the card it backs, the limit, orders"></a></td>
+<td width="25%"><a href="design/app-store/1290x2796/02-ask.png"><img src="design/thumbs/app-store/02-ask.png" alt="Ask: scan the product, say the limit, the agent searches"></a></td>
+<td width="25%"><a href="design/app-store/1290x2796/03-results.png"><img src="design/thumbs/app-store/03-results.png" alt="Results: three matches under the ceiling, agent’s pick"></a></td>
+<td width="25%"><a href="design/app-store/1290x2796/04-quote.png"><img src="design/thumbs/app-store/04-quote.png" alt="Quote: item, delivery and GST against the limit"></a></td>
+</tr>
+<tr>
+<td width="25%"><a href="design/app-store/1290x2796/05-blocked.png"><img src="design/thumbs/app-store/05-blocked.png" alt="Over the limit: S$4.46 over, pay disabled, no checkout"></a></td>
+<td width="25%"><a href="design/app-store/1290x2796/06-approve.png"><img src="design/thumbs/app-store/06-approve.png" alt="Approve: Reap’s hosted page inside the app"></a></td>
+<td width="25%"><a href="design/app-store/1290x2796/07-paid.png"><img src="design/thumbs/app-store/07-paid.png" alt="Paid: amount actually charged, order, vault 250 → 165.54"></a></td>
+<td width="25%"><a href="design/app-store/1290x2796/08-limit.png"><img src="design/thumbs/app-store/08-limit.png" alt="Spending limit: one number the user owns"></a></td>
 </tr>
 </table>
 

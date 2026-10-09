@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 /* Eight 1290x2796 artboards (the 6.7"/6.9" App Store size). Open with no query for a scaled gallery; ?shot=N renders one artboard
-   at full size for export (design/export-store-shots.sh). Everything inside the phone is laid out in iPhone logical points (393x852)
+   at full size for export (design/export-store-shots.sh; &z= fixes the scale, otherwise it fits the window width). Everything inside the phone is laid out in iPhone logical points (393x852)
    and scaled with CSS zoom, so the in-app type sizes read like the real app. Same tokens as glance-app-mockup.html, light theme. */
 :root{
   --bg:#F3F5F8; --surface:#FFFFFF; --ink:#101828; --muted:#566076; --line:#D7DDE8;
@@ -256,8 +256,8 @@ if(Q.get('sheet')){
 }else if(n>=1&&n<=SHOTS.length){
  document.body.className='shot';
  document.body.innerHTML=art(SHOTS[n-1],n);
- var fit=function(){document.documentElement.style.setProperty('--z',String(innerWidth/1290))};
- fit();addEventListener('resize',fit);
+ var z=+Q.get('z'), fit=function(){document.documentElement.style.setProperty('--z',String(z||innerWidth/1290))};
+ fit();if(!z)addEventListener('resize',fit);
 }else{
  document.body.className='gallery';
  document.body.innerHTML='<div><h1>Glance \u2014 App Store screenshots</h1><p>Eight 1290\u00d72796 artboards (6.7\u2033/6.9\u2033 iPhone). Click one to open it at full size, or add <code>?shot=N</code>. Export PNGs with <code>design/export-store-shots.sh</code>.</p></div>'+
