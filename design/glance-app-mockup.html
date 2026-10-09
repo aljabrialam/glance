@@ -1,4 +1,4 @@
-<title>Glance App Mockup</title>
+<title>Glance — interactive demo</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 /* Layout: step rail on the left, the phone in the middle, the API calls behind each screen on the right. Stacks to one column on a phone. */
@@ -120,154 +120,349 @@ pre{margin:0;background:var(--code-bg);color:var(--code-fg);border-radius:10px;p
 .spec ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;max-width:62ch}
 .reset{align-self:flex-start;font:inherit;font-size:14px;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
 @media (prefers-reduced-motion:reduce){.steps li.now i{animation:none}.fill{transition:none}}
+
+/* pitch additions */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.chip.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tb{font:inherit;font-weight:600;font-size:14px;border:1px solid var(--line);border-radius:10px;padding:9px 14px;background:var(--surface);color:var(--ink);cursor:pointer;min-height:40px}
+.tb.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.kbd{font-size:12px;color:var(--muted)}
+.stagecol{display:flex;flex-direction:column;gap:12px;align-items:center}
+.narr{width:100%;max-width:340px;min-height:72px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.4}
+.narr b{display:block;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600}
+.pitchbar{width:100%;max-width:340px;height:4px;border-radius:4px;background:var(--line);overflow:hidden}
+.pitchbar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s linear}
+.trace{background:var(--code-bg);color:var(--code-fg);border-radius:10px;padding:12px 14px;font-family:var(--mono);font-size:12.5px;line-height:1.6;min-height:132px;max-height:280px;overflow:auto}
+.trace div{display:flex;gap:10px;opacity:0;animation:tin .35s ease forwards;white-space:pre-wrap;word-break:break-word}
+@keyframes tin{to{opacity:1}}
+.trace .ts{color:#7C8AA5;flex:none;font-variant-numeric:tabular-nums}
+.trace .ok{color:#7BE3B0}.trace .rule{color:#A9B8FF}.trace .warn{color:#FFC46B}.trace .bad{color:#FF8C82}.trace .dim{color:#9AA6BC}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:1240px){.kv{grid-template-columns:1fr}}
+.kv pre{font-size:12px;max-height:300px;overflow:auto}
+.guar{display:flex;flex-direction:column;gap:6px;max-width:62ch}
+.guar div{display:flex;gap:8px;font-size:14px;align-items:flex-start}
+.guar i{flex:none;width:18px;height:18px;border-radius:50%;background:var(--ok-soft);color:var(--ok);display:grid;place-items:center;font-size:12px;font-style:normal;font-weight:700;margin-top:1px}
+.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.seg button{flex:1;font:inherit;font-size:13px;font-weight:600;padding:9px 6px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+.photo{display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.thumb{width:56px;height:56px;border-radius:10px;background:linear-gradient(180deg,#2B3550,#131928);display:grid;place-items:center;flex:none;position:relative}
+.thumb i{width:34px;height:16px;background:#E3E8F2;border-radius:3px;position:relative}
+.thumb i:after{content:'';position:absolute;left:5px;right:5px;bottom:3px;height:5px;background:repeating-linear-gradient(90deg,#1B2130 0 5px,transparent 5px 8px)}
+.thumb:before{content:'';position:absolute;inset:6px;border:1.5px solid rgba(169,184,255,.9);border-radius:4px;clip-path:polygon(0 0,25% 0,25% 10%,10% 10%,10% 25%,0 25%,0 100%,25% 100%,25% 90%,10% 90%,10% 75%,0 75%,0 0,100% 0,100% 25%,90% 25%,90% 10%,75% 10%,75% 0,100% 0,100% 100%,75% 100%,75% 90%,90% 90%,90% 75%,100% 75%,100% 0)}
+.hud{background:#0C1220;color:#A9B8FF;border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;font-family:var(--display);font-weight:700}
+.hud .k{color:#9AA6BC}
+.hud .say{font-family:var(--body);font-weight:500;font-size:14px;color:#EDF1F8;line-height:1.35}
+.hud .wave{display:flex;gap:3px;align-items:center;height:14px}.hud .wave b{width:3px;background:#A9B8FF;border-radius:2px;height:100%;animation:wv 1s ease-in-out infinite}
+.hud .wave b:nth-child(2){animation-delay:.1s;height:60%}.hud .wave b:nth-child(3){animation-delay:.2s;height:80%}.hud .wave b:nth-child(4){animation-delay:.3s;height:45%}.hud .wave b:nth-child(5){animation-delay:.4s}
+@keyframes wv{50%{transform:scaleY(.35)}}
+.thesis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:980px){.thesis{grid-template-columns:1fr}}
+.tcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.tcard h3{margin:0;font-family:var(--display);font-weight:700;font-size:18px;line-height:1.15}
+.tcard p{margin:0;font-size:14px;color:var(--muted);line-height:1.45}
+.tcard .k{color:var(--accent)}
+.real{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:980px){.real{grid-template-columns:1fr 1fr}}
+.real div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13px;line-height:1.4}
+.real b{display:block;font-size:14px;margin-bottom:2px}
+.section-h{font-family:var(--display);font-weight:700;font-size:22px;margin:8px 0 0;line-height:1.15}
+.delta{color:var(--ok);font-weight:600}
 </style>
 
 <div class="wrap">
   <div class="top">
     <div>
       <h1>Glance</h1>
-      <p class="lede">Clickable mockup of the mobile app. Tap through the phone, or jump with the step list. The right side shows what your backend calls on each screen.</p>
+      <p class="lede">Your agent shops. You approve. Your stablecoins pay. Walk the phone on the left; the right side shows exactly what the backend does on each screen — the Reap Agentic API calls, the Kwal vault reads, and the one rule the model never gets to make.</p>
     </div>
-    <span class="chip">Sandbox · sample data</span>
+    <div class="chips">
+      <span class="chip ok">Reap Agentic API · sandbox · SG/SGD</span>
+      <span class="chip ok">Kwal USDC vault</span>
+      <span class="chip ok">Phone camera · built</span>
+      <span class="chip warn">Meta Display · concept</span>
+    </div>
+  </div>
+
+  <div class="tools">
+    <button class="tb primary" id="play">▶ Play the pitch (60 s)</button>
+    <button class="tb" data-act="guardrail">Show the guardrail</button>
+    <button class="tb" data-act="reset">Reset</button>
+    <span class="kbd">Keys: ← → screens · space play/pause · G guardrail</span>
   </div>
 
   <div class="layout">
     <ol class="rail" id="rail" aria-label="Screens"></ol>
-    <div class="device"><div class="screen" id="screen" aria-live="polite"></div></div>
+    <div class="stagecol">
+      <div class="narr" id="narr"></div>
+      <div class="device"><div class="screen" id="screen" aria-live="polite"></div></div>
+      <div class="pitchbar" aria-hidden="true"><i id="pbar"></i></div>
+    </div>
     <aside class="spec" id="spec"></aside>
   </div>
+
+  <h2 class="section-h">The thesis</h2>
+  <div class="thesis">
+    <div class="tcard"><span class="k">Why now</span><h3>Agents are about to shop. Nobody has built the leash.</h3><p>Reap's Agentic API gives software a real card at real merchants. The missing piece is permission: who decides that a specific total, with shipping and tax, may become a charge. Today the answer is either "the model" or "the human re-does the checkout".</p></div>
+    <div class="tcard"><span class="k">What Glance does</span><h3>Limit before checkout. Approval on the provider's page. Card never seen.</h3><p>A pure, unit-tested rule over whole cents decides whether a checkout may even be opened. The user taps approve on Reap's hosted page, inside the app. The model only ever turns a photo or a sentence into a query and a ceiling.</p></div>
+    <div class="tcard"><span class="k">Why it bridges onchain and real world</span><h3>USDC in a wallet you own pays a merchant that has never heard of crypto.</h3><p>The Kwal vault backs the card; Reap routes the purchase; the merchant sees a normal order. Two ways in — Meta Display glasses (concept) or the phone camera (built) — one approval, one honest receipt.</p></div>
+  </div>
+
+  <h2 class="section-h">What is real tonight</h2>
+  <div class="real">
+    <div><b>Built · live sandbox</b>Reap products/search, details, quotes, checkouts, hosted approval page, order reference and final amount. Singapore market, SGD.</div>
+    <div><b>Built · our code</b>Per-purchase limit rule (8 unit tests), integer-cents money, intent from photo or text with a vision model and a regex fallback, Expo app with WebView approval.</div>
+    <div><b>Built behind a flag</b>Kwal vault balance via <code>pws_client</code> when credentials exist; otherwise a balance clearly labelled mock.</div>
+    <div><b>Concept</b>Meta Display glasses view — same agent, same rules, shown in the product film. Approval would still happen on the phone.</div>
+  </div>
+  <p class="note">This page is a self-contained mockup with sample data in the shapes the Reap sandbox returns. Nothing here calls a network. The mobile app in <code>mobile/</code> runs the same flow for real.</p>
 </div>
 
 <script>
 (function(){
+// ---------- data: Singapore demo, integer cents (constitution V) ----------
 var P=[
-  {n:'Sony WH-1000XM5 Wireless Headphones',v:'Black',m:'Audiohub',p:129,tag:'Best price'},
-  {n:'Sony WH-1000XM5 Wireless Headphones',v:'Silver',m:'SoundCart',p:139,tag:''},
-  {n:'Sony WH-1000XM4 Wireless Headphones',v:'Black',m:'Audiohub',p:109,tag:'Older model'}
+  {id:'prd_01',n:'Anker Nano USB-C Hub (8-in-1)',m:'anker.com.sg',p:7290,v:'var_52786047254813',tag:'Agent\u2019s pick'},
+  {id:'prd_02',n:'Anker 7-in-1 USB-C Hub (A8346)',m:'anker.com.sg',p:4990,v:'var_52786047254820',tag:''},
+  {id:'prd_03',n:'Anker 553 USB-C Hub (8-in-1, 100W)',m:'anker.com.sg',p:10990,v:'var_52786047254837',tag:''}
 ];
-var SHIP={std:{n:'Standard',p:5,eta:'arrives Friday'},exp:{n:'Express',p:13,eta:'arrives Wednesday'}};
-var TAX=5, START=250;
-var S={scr:'home',limit:150,ship:'std',vault:START,pick:0,orders:[],busy:0,toast:'',last:null};
+var SHIP={std:{id:'ship_std',n:'Standard delivery',p:500,eta:'3\u20135 days'},exp:{id:'ship_exp',n:'Express delivery',p:1200,eta:'next day'}};
+var GST_BP=900, START=25000, LAST4='4242';
+var S0={scr:'home',limit:15000,ship:'std',vault:START,pick:0,orders:[],busy:0,toast:'',last:null,src:'text',photo:false,approving:0,seq:1};
+var S=JSON.parse(JSON.stringify(S0));
 var SCREENS=[['home','Home'],['ask','Ask'],['results','Results'],['quote','Quote'],['approve','Approve'],['paid','Paid'],['limit','Spending limit']];
-function total(){return P[S.pick].p+SHIP[S.ship].p+TAX}
-function m(n){return '$'+n.toFixed(2)}
+function item(){return P[S.pick].p}
+function tax(){return Math.round(item()*GST_BP/10000)}
+function total(){return item()+SHIP[S.ship].p+tax()}
+function dec(t){var over=t-S.limit;return {limitCents:S.limit,totalCents:t,allowed:over<=0,overByCents:Math.max(0,over),remainingCents:Math.max(0,-over)}}
+function m(c){return 'S$'+Math.trunc(c/100)+'.'+('0'+Math.abs(c)%100).slice(-2)}
+function usd(c){return Math.trunc(c/100)+'.'+('0'+c%100).slice(-2)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function J(o){return JSON.stringify(o,null,2)}
+function askText(){return S.photo?'under '+m(S.limit).replace('.00',''):'Buy an Anker Nano USB-C hub, under '+m(S.limit).replace('.00','')}
+function quoteId(){return 'qt_7f3a'+S.seq}
+function hasEnrollment(){return true}
 
-var SPEC={
- home:{t:'Home: vault, card and limit',see:'The user sees how much USDC is in their vault, which card it backs, and the limit the agent must respect.',
-  calls:'# Kwal: vault and card state (read only)\npython3 scripts/register.py status\n\n# Reap: the stored card for this user\nGET /agentic/enrollments?ownerType=…&ownerId=…\n→ status ACTIVE, paymentMethod.last4',
-  notes:['Do enrollment once during setup, not in the demo path.','Only an ACTIVE enrollment can be charged. Read it before every checkout.']},
- ask:{t:'Ask: one sentence in',see:'The user types or speaks a request. The agent turns it into a search query and a price ceiling.',
-  calls:'# Your backend, no Reap call yet\nPOST /api/intent\n{ "text": "Buy Sony WH-1000XM5 headphones, under $150" }\n→ { "query": "Sony WH-1000XM5 headphones",\n    "maxPrice": 150 }',
-  notes:['Use the LLM for parsing only. It never sees card details.','Keep the three progress lines: they make the agent feel alive in the video.']},
- results:{t:'Results: what the agent found',see:'A short list from merchant catalogs, with the agent\'s pick preselected.',
-  calls:'POST /agentic/products/search\n{ "query": "Sony WH-1000XM5 headphones",\n  "context": { "country": "US", "currency": "USD" },\n  "filters": { "price": { "max": "150" },\n               "availability": "AVAILABLE_ONLY" } }\n\nPOST /agentic/products/details\n{ "productIds": ["<product-id>"] }\n→ defaultVariant.id',
-  notes:['Check your item against the supported merchant sheet first.','If the user accepts the default variant you can skip the variant call.']},
- quote:{t:'Quote: price against the limit',see:'The merchant\'s real total with shipping and tax, measured against the user\'s limit. Over the limit, the agent stops.',
-  calls:'POST /agentic/quotes            # Idempotency-Key required\n{ "items": [{ "variantId": "<variant-id>", "quantity": 1 }],\n  "email": "<user-email>" }\n→ amountBreakdown.finalAmount, shippingOptions, expiresAt\n\nPOST /agentic/quotes/:id/shipping-option\n{ "shippingOptionId": "<option-id>" }\n\n# Your rule\nif finalAmount > user.limit: block checkout',
-  notes:['Mandates are not live yet, so the limit check is your code.','Quotes expire. Create the checkout before expiresAt.','Try it: pick the Silver pair with Express shipping to see the block.']},
- approve:{t:'Approve: the hosted page',see:'The user approves the charge on a page hosted by Reap, opened in a WebView. Your app cannot replace this step.',
-  calls:'POST /agentic/checkouts          # Idempotency-Key required\nX-Simulate-Checkout: COMPLETED   # sandbox only\n{ "quoteId": "<quote-id>",\n  "enrollmentId": "<enrollment-id>",\n  "presentation": { "type": "REDIRECT",\n                    "returnUrl": "https://<your-backend>/done" } }\n→ status REQUIRES_ACTION, nextAction.url',
-  notes:['Open nextAction.url in the WebView. The return URL must be HTTPS.','This screen is a stand-in. The real page comes from Reap.']},
- paid:{t:'Paid: order confirmed',see:'The order reference, the amount charged, and the vault balance after the spend.',
-  calls:'GET /agentic/checkouts/:id       # poll until terminal\n→ status COMPLETED, orderId, finalAmount\n\n# Kwal: vault balance after the card spend\npython3 scripts/register.py status',
-  notes:['Show finalAmount, not the quote total. It is the amount actually charged.','Sandbox: the checkout is simulated and nothing ships.']},
- limit:{t:'Spending limit',see:'One number the user controls. The agent never checks out above it.',
-  calls:'# Your backend\nPUT /api/users/:id/limit\n{ "perPurchase": 150, "currency": "USD" }',
-  notes:['This is the permission story for the judges: the user sets it, the agent obeys it.','Drag it below the quote total, then open Quote to see the agent stop.']}
+// ---------- narration (the pitch voice) ----------
+var NARR={
+ home:['Start here','A USDC vault the user owns, the card it backs, and one number the agent can never exceed. No orders yet.'],
+ ask:['Two ways in','Look at it through Meta Display glasses, or scan it with the phone camera. Say the most you will pay. The model only turns this into a query and a ceiling.'],
+ results:['The agent searches, it does not decide','Real merchant catalogues via Reap, Singapore market. Up to three matches at or under the ceiling, the best one preselected.'],
+ quote:['The real number, checked before anything opens','Item, shipping, GST from the merchant\u2019s live quote. A pure rule compares the total with the limit. Change delivery and it re-prices.'],
+ quoteOver:['Over the limit, the agent stops','No checkout is created. The user sees exactly how much over, and can pick cheaper delivery or change the limit. This is the guardrail judges will probe.'],
+ approve:['Money moves only here','Reap\u2019s own approval page, inside the app. The agent never sees the card. Decline charges nothing.'],
+ paid:['An honest receipt','The amount actually charged, not the estimate. Order reference, delivery, and the vault after the spend. Onchain funds, real-world merchant, one tap.'],
+ limit:['The permission is one number','The user controls it; the next quote obeys it. Mandates are not live in the Reap sandbox, so this is Glance\u2019s own code, unit tested.']
 };
 
-function sbar(){return '<div class="sbar"><span>4:42</span><span>Sandbox</span></div>'}
+// ---------- backend panel: trace lines + request/response per screen ----------
+function T(ms,s,cls){return {t:ms,s:s,c:cls||''}}
+function PANEL(){
+ var p=P[S.pick],t=total(),d=dec(t),over=!d.allowed,sh=SHIP[S.ship];
+ var intentReq={text:S.src==='glasses'?'Find me the best price for this, under '+m(S.limit).replace('.00','')+'.':askText()};if(S.photo)intentReq.image='<jpeg base64, 38 KB>';
+ var intentRes={query:'Anker Nano USB-C hub',maxPriceCents:S.limit,parser:S.photo?'llm (vision)':'llm',fromPhoto:S.photo};
+ return {
+ home:{t:'Home: vault, card and limit',see:'What the user sees first: how much USDC is in their vault, which card it backs, the limit the agent must respect, and this session\u2019s orders.',
+  trace:[T(0,'GET /api/home','req'),T(350,'vault.py \u2192 Kwal pws_client.read_funding()  \u2192 '+usd(S.vault)+' USDC on Ink Sepolia','ok'),T(700,'GET /agentic/enrollments/enr_9c2\u2026  200  \u2192 status ACTIVE \u00b7 last4 '+LAST4,'ok'),T(1000,'limit '+m(S.limit)+' per purchase \u00b7 orders this session: '+S.orders.length,'dim')],
+  req:'GET /api/home',res:J({vaultBalanceCents:S.vault,vaultSource:'kwal',cardLast4:LAST4,currency:'SGD',limitCents:S.limit,enrollmentActive:true,orders:S.orders.map(function(o){return {orderId:o.ref,finalAmountCents:o.amt}})}),
+  guar:['Only an ACTIVE enrollment can ever be charged; it is read, not created, in the demo path.','The vault balance is read from Kwal, never computed from the app\u2019s own arithmetic.']},
+ ask:{t:'Ask: a photo, a glance, or one sentence',see:'The user scans the product with the camera (built), looks at it through the glasses (concept), or types. The backend turns that into a search query and a price ceiling in whole cents \u2014 and nothing else.',
+  trace:S.busy?[T(0,'POST /api/intent  '+(S.photo?'{ text, image: 38 KB jpeg }':'{ text }'),'req'),T(500,(S.photo?'vision model \u2192 "Anker Nano USB-C Hub (8-in-1)"':'llm \u2192 query "Anker Nano USB-C hub"')+' \u00b7 ceiling '+m(S.limit)+' \u2192 '+S.limit+'\u00a2','ok'),T(900,'prompt contains no card data, by construction','rule'),T(1400,'POST /agentic/products/search  \u2026','req')]
+    :[T(0,'waiting for input \u00b7 camera | glasses | text','dim'),T(400,'intent is the only LLM call in the product','rule')],
+  req:'POST /api/intent\n'+J(intentReq),res:J(intentRes),
+  guar:['The model parses; it never searches, prices, or pays.','Regex fallback keeps the demo alive if the model is unavailable.']},
+ results:{t:'Results: what the agent found',see:'Up to three available products at or under the ceiling, ranked, with the agent\u2019s pick preselected. The user can change the pick; the agent recommends, it does not decide.',
+  trace:[T(0,'POST /agentic/products/search  { query, context: SG/SGD, price.max '+usd(S.limit)+', AVAILABLE_ONLY }','req'),T(450,'200 \u00b7 412 ms \u00b7 '+P.filter(function(x){return x.p<=S.limit}).length+' products \u2264 ceiling \u00b7 ranked, pick = '+P[0].id,'ok'),T(900,'POST /agentic/products/details  { productIds: [\u2026] }','req'),T(1300,'200 \u00b7 defaultVariant.id per product \u00b7 merchant.name "---" in sandbox \u2192 shown as merchant via Reap','ok')],
+  req:'POST /agentic/products/search\nReap-Version: 2025-02-14\n'+J({query:'Anker Nano USB-C hub',context:{country:'SG',currency:'SGD'},filters:{price:{max:usd(S.limit)},availability:'AVAILABLE_ONLY'}}),
+  res:J({products:P.filter(function(x){return x.p<=S.limit}).map(function(x){return {id:x.id,name:x.n,price:{amount:+usd(x.p),currency:'SGD'},availability:'AVAILABLE'}})}),
+  guar:['Only AVAILABLE products at or under the ceiling are shown.','Default variant is used; variant selection is out of scope tonight.']},
+ quote:{t:over?'Quote: blocked before checkout':'Quote: the real total against the limit',see:over?'The merchant\u2019s total exceeds the limit. No checkout is created, the pay button is disabled, and the user is told the exact amount over. Cheaper delivery or a higher limit re-evaluates.':'The merchant\u2019s live total \u2014 item, shipping, GST \u2014 in whole cents, with a ten-minute price hold. The limit rule runs here, and again at checkout.',
+  trace:[T(0,'POST /agentic/quotes  Idempotency-Key: 6b1e\u2026  { items:[{ variantId: '+p.v+', quantity: 1 }], email, shippingAddress }','req'),T(500,'200 \u00b7 688 ms \u00b7 amountBreakdown: item '+usd(item())+' \u00b7 shipping '+usd(sh.p)+' \u00b7 tax '+usd(tax())+' \u2192 finalAmount '+usd(t)+' SGD \u00b7 expiresAt +10 min','ok'),T(900,'money.to_cents(Decimal) \u2192 '+t+'  (never float)','rule'),T(1300,'limits.evaluate('+t+', '+S.limit+') \u2192 '+(over?'BLOCKED \u00b7 over by '+d.overByCents+'\u00a2 \u00b7 no checkout will be created':'allowed \u00b7 remaining '+d.remainingCents+'\u00a2'),over?'bad':'ok')].concat(S.ship==='exp'?[T(1700,'POST /agentic/quotes/'+quoteId()+'/shipping-option  { shippingOptionId: ship_exp }  \u2192 re-priced, re-evaluated','req')]:[]),
+  req:'POST /agentic/quotes\nIdempotency-Key: 6b1e9c\u2026\n'+J({items:[{variantId:p.v,quantity:1}],email:'demo@glance.app',shippingAddress:{country:'SG',city:'Singapore',postalCode:'239015'}}),
+  res:J({id:quoteId(),amountBreakdown:{subtotal:{amount:+usd(item()),currency:'SGD'},shipping:{amount:+usd(sh.p),currency:'SGD'},tax:{amount:{amount:+usd(tax()),currency:'SGD'}},finalAmount:{amount:+usd(t),currency:'SGD'}},shippingOptions:[{id:'ship_std',name:'Standard delivery',selected:S.ship==='std'},{id:'ship_exp',name:'Express delivery',selected:S.ship==='exp'}],expiresAt:'+10 min'})+'\n\n// Glance rule\nlimits.evaluate('+t+', '+S.limit+')\n'+J(d),
+  guar:['Limit is checked against the quoted total, not the item price.','Inclusive at the limit; pure function; 8 unit tests named by AC id.','Quotes expire \u2014 checkout is created before expiresAt or re-quoted.']},
+ approve:{t:'Approve: Reap\u2019s hosted page, inside the app',see:'The checkout is created only after the limit passes again. Reap returns an approval URL; the app opens it in a WebView and waits for the return to /done. The app cannot and does not replace this page.',
+  trace:[T(0,'limits.evaluate('+t+', '+S.limit+') \u2192 allowed  (checked again at checkout)','rule'),T(400,'POST /agentic/checkouts  Idempotency-Key: 2d7a\u2026  { quoteId: '+quoteId()+', enrollmentId: enr_9c2\u2026, presentation: { REDIRECT, returnUrl: https://\u2026/done } }','req'),T(900,'201 \u00b7 status REQUIRES_ACTION \u00b7 nextAction.url \u2192 opened in WebView','ok'),T(1300,'card fields are rendered by Reap, never by the app \u00b7 no card data in logs or prompts','rule'),T(1700,'waiting for the user\u2026','dim')].concat(S.approving?[T(2000,'GET /agentic/checkouts/co_41\u2026  \u2192 PROCESSING','req'),T(2600,'GET /agentic/checkouts/co_41\u2026  \u2192 COMPLETED \u00b7 orderId ORD-SG-'+(1003+S.orders.length)+' \u00b7 finalAmount '+usd(t),'ok')]:[]),
+  req:'POST /agentic/checkouts\nIdempotency-Key: 2d7a4f\u2026\nX-Simulate-Checkout: COMPLETED   // sandbox fallback only\n'+J({quoteId:quoteId(),enrollmentId:'enr_9c2\u2026',presentation:{type:'REDIRECT',returnUrl:'https://glance.example/done'}}),
+  res:J({id:'co_41\u2026',status:'REQUIRES_ACTION',nextAction:{type:'REDIRECT',url:'https://sandbox.pay.reap.global/\u2026'}}),
+  guar:['User approves every charge on the provider\u2019s page. Never recreated, never automated.','Decline or cancel returns to the quote with nothing charged and no order recorded.']},
+ paid:{t:'Paid: what was actually charged',see:'The app polls the checkout until it is terminal and shows finalAmount from Reap \u2014 never the quote \u2014 with the order reference, the delivery chosen, and the vault balance read again after the spend.',
+  trace:[T(0,'GET /agentic/checkouts/co_41\u2026  \u2192 COMPLETED','ok'),T(400,'orderId '+(S.last?S.last.ref:'ORD-SG-1003')+' \u00b7 finalAmount '+usd(S.last?S.last.amt:t)+' SGD  (shown, not the quote)','rule'),T(800,'vault.py \u2192 Kwal read_funding()  \u2192 '+usd(S.vault)+' USDC  (was '+usd(S.last?S.last.before:S.vault)+')','ok'),T(1200,'order recorded for this session \u00b7 nothing ships in sandbox','dim')],
+  req:'GET /agentic/checkouts/co_41\u2026   // poll until terminal',res:J({id:'co_41\u2026',status:'COMPLETED',orderId:S.last?S.last.ref:'ORD-SG-1003',finalAmount:{amount:+usd(S.last?S.last.amt:t),currency:'SGD'}})+'\n\n// Kwal\nread_funding() \u2192 { balance: '+usd(S.vault)+', asset: "USDC", chain: "Ink Sepolia" }',
+  guar:['Honest amounts: finalAmount from the provider, in whole cents.','Vault before and after come from Kwal, not from subtraction in the UI.']},
+ limit:{t:'Spending limit: the permission',see:'One number the user controls, stored in whole cents. The next quote evaluation uses it. The agent never checks out above it.',
+  trace:[T(0,'PUT /api/limit  { perPurchaseCents: '+S.limit+' }','req'),T(400,'stored \u00b7 applies to the next limits.evaluate()','ok'),T(800,'Reap mandates are not live in sandbox \u2192 this rule is Glance\u2019s own code','rule')],
+  req:'PUT /api/limit\n'+J({perPurchaseCents:S.limit}),res:J({limitCents:S.limit}),
+  guar:['Integer cents only; a non-integer or non-positive limit is rejected.','Changing the limit never retro-approves an existing checkout.']}
+ };
+}
 
+// ---------- phone views ----------
+function sbar(){return '<div class="sbar"><span>Glance</span><span>Sandbox</span></div>'}
 var V={
  home:function(){
-  var orders=S.orders.length?S.orders.map(function(o){return '<div class="rowc"><div><strong>'+esc(o.name)+'</strong><span>Order '+o.ref+' · '+esc(o.merchant)+'</span></div><strong>'+m(o.amt)+'</strong></div>'}).join('')
+  var orders=S.orders.length?S.orders.map(function(o){return '<div class="rowc"><div><strong>'+esc(o.name)+'</strong><span>Order '+o.ref+' \u00b7 '+esc(o.merchant)+'</span></div><strong>'+m(o.amt)+'</strong></div>'}).join('')
    :'<div class="empty">No orders yet. Ask Glance to buy something and it shows up here.</div>';
   return sbar()+'<div class="view">'+
-   '<div class="vault"><span class="k">USDC vault</span><span class="amt">'+S.vault.toFixed(2)+'<small>USDC</small></span><span class="meta">Test funds on Ink Sepolia · backs card •••• 7797</span></div>'+
+   '<div class="vault"><span class="k">USDC vault</span><span class="amt">'+usd(S.vault)+'<small>USDC</small></span><span class="meta">Kwal vault on Ink Sepolia \u00b7 backs card \u2022\u2022\u2022\u2022 '+LAST4+'</span></div>'+
    '<div class="rowc"><div><strong>'+m(S.limit)+' per purchase</strong><span>Glance stops above this</span></div><button class="link" data-go="limit">Change</button></div>'+
    '<span class="k">Orders</span>'+orders+
    '</div><div class="foot"><button class="btn" data-go="ask">Ask Glance to buy something</button></div>';
  },
  ask:function(){
-  var lines=['Reading your request','Searching merchants','Checking live prices'];
-  var prog=S.busy?'<ul class="steps">'+lines.map(function(l,i){var c=i<S.busy-1?'done':(i===S.busy-1?'now':'');return '<li class="'+c+'"><i></i>'+l+'</li>'}).join('')+'</ul>':'<p class="note">Sample request. The mockup returns the same sample results for any text.</p>';
-  return sbar()+'<div class="view"><button class="back" data-go="home">← Home</button><h2 class="h">What should I buy?</h2>'+
-   '<textarea id="ask" aria-label="Your request"'+(S.busy?' disabled':'')+'>Buy Sony WH-1000XM5 headphones, under '+m(S.limit).replace('.00','')+'</textarea>'+prog+
-   '</div><div class="foot"><button class="btn" data-act="send"'+(S.busy?' disabled':'')+'>'+(S.busy?'Working…':'Find it')+'</button></div>';
+  var lines=[S.photo?'Looking at the photo':'Reading your request','Searching merchants','Checking live prices'];
+  var prog=S.busy?'<ul class="steps">'+lines.map(function(l,i){var c=i<S.busy-1?'done':(i===S.busy-1?'now':'');return '<li class="'+c+'"><i></i>'+l+'</li>'}).join('')+'</ul>':'';
+  var seg='<div class="seg" role="group" aria-label="How to tell Glance">'+[['camera','\ud83d\udcf7 Scan'],['glasses','\ud83d\udc53 Glasses'],['text','\u2328 Type']].map(function(o){return '<button data-src="'+o[0]+'" aria-pressed="'+(S.src===o[0])+'"'+(S.busy?' disabled':'')+'>'+o[1]+'</button>'}).join('')+'</div>';
+  var input='';
+  if(S.src==='camera')input=S.photo?'<div class="photo"><div class="thumb"><i></i></div><div class="body"><strong>Photo attached</strong><br><span class="mt" style="font-size:13px;color:var(--muted)">Glance will identify the product in it</span></div><button class="link" data-act="unphoto"'+(S.busy?' disabled':'')+'>Remove</button></div>'
+     :'<button class="btn ghost" data-act="photo"'+(S.busy?' disabled':'')+'>Scan the product</button><p class="note">Camera on a device; photo library on the simulator. The photo goes to the backend, never to a merchant.</p>';
+  if(S.src==='glasses')input='<div class="hud"><span class="k">Meta Display \u00b7 concept</span><div class="wave"><b></b><b></b><b></b><b></b><b></b></div><span class="say">\u201cFind me the best price for this, under '+m(S.limit).replace('.00','')+'.\u201d</span><span class="k" style="font-size:11px">Anker Nano USB-C Hub 8-in-1 \u00b7 seen on the shelf</span></div><p class="note">Hands-free input, same agent, same rules. Approval still happens on the phone.</p>';
+  var ta='<textarea id="ask" aria-label="Your request"'+(S.busy?' disabled':'')+' placeholder="e.g. Buy an Anker Nano USB-C hub, under S$150">'+(S.src==='glasses'?'':esc(askText()))+'</textarea>';
+  return sbar()+'<div class="view"><button class="back" data-go="home">\u2190 Home</button><h2 class="h">What should I buy?</h2><p class="sub">Point the camera at it, glance at it, or just tell me.</p>'+seg+input+(S.src==='glasses'?'':ta)+prog+
+   '</div><div class="foot"><button class="btn" data-act="send"'+(S.busy?' disabled':'')+'>'+(S.busy?'Working\u2026':'Find it')+'</button></div>';
  },
  results:function(){
-  return sbar()+'<div class="view"><button class="back" data-go="ask">← Ask</button><h2 class="h">3 matches found</h2><p class="sub">Sample catalog results. Prices before shipping and tax.</p>'+
-   P.map(function(p,i){return '<label class="opt"><input type="radio" name="pick" id="pick'+i+'" value="'+i+'"'+(S.pick===i?' checked':'')+'><span class="body"><span class="nm">'+esc(p.n)+'</span><br><span class="mt">'+p.v+' · '+p.m+'</span>'+(p.tag?'<br><span class="pill'+(i?' warn':'')+'">'+p.tag+'</span>':'')+'</span><span class="pr">'+m(p.p)+'</span></label>'}).join('')+
+  var list=P.filter(function(x){return x.p<=S.limit});
+  return sbar()+'<div class="view"><button class="back" data-go="ask">\u2190 Ask</button><h2 class="h">'+list.length+' match'+(list.length===1?'':'es')+' found</h2><p class="sub">From merchant catalogues via Reap \u00b7 Singapore. Prices before shipping and GST.</p>'+
+   P.map(function(p,i){if(p.p>S.limit)return '';return '<label class="opt"><input type="radio" name="pick" value="'+i+'"'+(S.pick===i?' checked':'')+'><span class="body"><span class="nm">'+esc(p.n)+'</span><br><span class="mt">'+p.m+'</span>'+(p.tag?'<br><span class="pill">'+p.tag+'</span>':'')+'</span><span class="pr">'+m(p.p)+'</span></label>'}).join('')+
    '</div><div class="foot"><button class="btn" data-go="quote">Get the full price</button></div>';
  },
  quote:function(){
-  var p=P[S.pick],t=total(),over=t>S.limit,pct=Math.min(100,t/S.limit*100);
-  return sbar()+'<div class="view"><button class="back" data-go="results">← Results</button>'+
-   (S.toast?'<div class="toast">'+S.toast+'</div>':'')+
-   '<h2 class="h">'+esc(p.n)+'</h2><p class="sub">'+p.v+' · '+p.m+'</p>'+
-   (over?'<div class="alert">'+m(t-S.limit)+' over your limit. Glance will not check out. Pick cheaper shipping or raise the limit.</div>':'')+
-   '<span class="k">Shipping</span>'+
-   ['std','exp'].map(function(k){var s=SHIP[k];return '<label class="opt"><input type="radio" name="ship" id="ship-'+k+'" value="'+k+'"'+(S.ship===k?' checked':'')+'><span class="body"><span class="nm">'+s.n+'</span><br><span class="mt">'+s.eta+'</span></span><span class="pr">'+m(s.p)+'</span></label>'}).join('')+
-   '<div class="lines"><div><span>Item</span><span>'+m(p.p)+'</span></div><div><span>Shipping</span><span>'+m(SHIP[S.ship].p)+'</span></div><div><span>Tax</span><span>'+m(TAX)+'</span></div><div><span>Total</span><span>'+m(t)+'</span></div></div>'+
-   '<div class="meter"><div class="track"><div class="fill'+(over?' over':'')+'" style="width:'+pct+'%"></div></div><div class="mrow"><span>'+(over?m(t-S.limit)+' over your limit':m(S.limit-t)+' under your limit')+'</span><span>Limit '+m(S.limit)+'</span></div></div>'+
+  var p=P[S.pick],t=total(),d=dec(t),over=!d.allowed,pct=Math.min(100,Math.round(t*100/S.limit));
+  return sbar()+'<div class="view"><button class="back" data-go="results">\u2190 Results</button>'+(S.toast?'<div class="toast">'+esc(S.toast)+'</div>':'')+
+   '<h2 class="h">'+esc(p.n)+'</h2><p class="sub">'+p.m+'</p>'+
+   (over?'<div class="alert">'+m(d.overByCents)+' over your limit. Glance will not check out. Pick cheaper delivery or raise the limit.</div>':'')+
+   '<span class="k">Delivery</span>'+['std','exp'].map(function(k){var s=SHIP[k];return '<label class="opt"><input type="radio" name="ship" id="ship-'+k+'" value="'+k+'"'+(S.ship===k?' checked':'')+'><span class="body"><span class="nm">'+s.n+'</span><br><span class="mt">'+s.eta+'</span></span><span class="pr">'+m(s.p)+'</span></label>'}).join('')+
+   '<div class="lines"><div><span>Item</span><span>'+m(item())+'</span></div><div><span>Shipping</span><span>'+m(SHIP[S.ship].p)+'</span></div><div><span>GST 9%</span><span>'+m(tax())+'</span></div><div><span>Total</span><span>'+m(t)+'</span></div></div>'+
+   '<div class="meter"><div class="track"><div class="fill'+(over?' over':'')+'" style="width:'+pct+'%"></div></div><div class="mrow"><span>'+(over?m(d.overByCents)+' over your limit':m(d.remainingCents)+' under your limit')+'</span><span>Limit '+m(S.limit)+'</span></div></div>'+
    (over?'':'<p class="note">Price held by the merchant for <span id="hold">10:00</span>.</p>')+
    '</div><div class="foot"><button class="btn" data-go="approve"'+(over?' disabled':'')+'>Review and pay '+m(t)+'</button>'+(over?'<button class="btn ghost" data-go="limit">Change limit</button>':'')+'</div>';
  },
  approve:function(){
   var p=P[S.pick],t=total();
-  return sbar()+'<div class="hosted"><div class="url">🔒 hosted approval page · opened in a WebView</div><div class="view">'+
-   '<div class="sheet"><span class="k">Approve this payment</span><span class="amt">'+m(t)+'</span><span>'+esc(p.n)+' ('+p.v+')</span><span class="sub">'+p.m+' · '+SHIP[S.ship].n+' shipping</span></div>'+
-   '<div class="rowc"><div><strong>Card •••• 7797</strong><span>Backed by your USDC vault</span></div><span class="pill">Active</span></div>'+
-   '<p class="note">Stand-in for the page Reap hosts. Card details never reach the app or the agent.</p>'+
-   '</div></div><div class="foot"><button class="btn" data-act="approve">Approve '+m(t)+'</button><button class="btn ghost" data-act="decline">Decline</button></div>';
+  if(!dec(t).allowed){S.scr='quote';return V.quote()}
+  return sbar()+'<div class="hosted"><div class="url">\ud83d\udd12 sandbox.pay.reap.global/\u2026 \u00b7 WebView</div><div class="view">'+
+   '<div class="sheet"><span class="k">Approve this payment</span><span class="amt">'+m(t)+'</span><span>'+esc(p.n)+'</span><span class="sub">'+p.m+' \u00b7 '+SHIP[S.ship].n+'</span></div>'+
+   '<div class="rowc"><div><strong>Card \u2022\u2022\u2022\u2022 '+LAST4+'</strong><span>Backed by your USDC vault</span></div><span class="pill">Active</span></div>'+
+   (S.approving?'<ul class="steps"><li class="done"><i></i>Approved on Reap\u2019s page</li><li class="now"><i></i>Confirming with Reap\u2026</li></ul>':'<p class="note">Stand-in for the page Reap hosts. Card details never reach the app, the server, or the model.</p>')+
+   '</div></div><div class="foot"><button class="btn" data-act="approve"'+(S.approving?' disabled':'')+'>'+(S.approving?'Confirming\u2026':'Approve '+m(t))+'</button><button class="btn ghost" data-act="decline"'+(S.approving?' disabled':'')+'>Decline</button></div>';
  },
  paid:function(){
-  var o=S.last||{name:P[S.pick].n,merchant:P[S.pick].m,amt:total(),ref:12345,ship:SHIP[S.ship],after:S.vault-total(),preview:1};
+  var o=S.last||{name:P[S.pick].n,merchant:P[S.pick].m,amt:total(),ref:'ORD-SG-1003',ship:SHIP[S.ship],before:S.vault,after:S.vault-total(),preview:1};
   return sbar()+'<div class="view"><div class="done-mark"><svg viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>'+
-   '<h2 class="h center">Paid '+m(o.amt)+'</h2><p class="sub center">From your USDC vault</p>'+
-   '<div class="lines"><div><span>Order</span><span>'+o.ref+'</span></div><div><span>Merchant</span><span>'+esc(o.merchant)+'</span></div><div><span>Delivery</span><span>'+o.ship.n+', '+o.ship.eta+'</span></div><div><span>Vault balance</span><span>'+o.after.toFixed(2)+' USDC</span></div></div>'+
-   '<p class="note">'+(o.preview?'Preview of this screen. Approve a payment to record the order. ':'')+'Sandbox: the checkout is simulated and nothing ships.</p>'+
+   '<h2 class="h center">Paid '+m(o.amt)+'</h2><p class="sub center">Amount actually charged \u00b7 from your USDC vault</p>'+
+   '<div class="lines"><div><span>Order</span><span>'+o.ref+'</span></div><div><span>Item</span><span style="text-align:right">'+esc(o.name)+'</span></div><div><span>Merchant</span><span>'+esc(o.merchant)+'</span></div><div><span>Delivery</span><span>'+o.ship.n+', '+o.ship.eta+'</span></div><div><span>Vault balance</span><span>'+usd(o.before)+' \u2192 <span class="delta">'+usd(o.after)+'</span> USDC</span></div></div>'+
+   '<p class="note">'+(o.preview?'Preview. Approve a payment to record a real order in this session. ':'')+'Sandbox: the checkout is simulated and nothing ships.</p>'+
    '</div><div class="foot"><button class="btn" data-go="home">Done</button></div>';
  },
  limit:function(){
-  return sbar()+'<div class="view"><button class="back" data-go="home">← Home</button><h2 class="h">Spending limit</h2><p class="sub">The most Glance can spend on one purchase, shipping and tax included.</p>'+
-   '<div class="bigval center" id="limval">'+m(S.limit).replace('.00','')+'</div>'+
-   '<input type="range" id="limit" min="50" max="300" step="10" value="'+S.limit+'" aria-label="Per-purchase limit in dollars">'+
-   '<div class="mrow"><span>$50</span><span>$300</span></div>'+
+  return sbar()+'<div class="view"><button class="back" data-go="home">\u2190 Home</button><h2 class="h">Spending limit</h2><p class="sub">The most Glance can spend on one purchase, delivery and GST included.</p>'+
+   '<div class="bigval center" id="limval">'+m(S.limit)+'</div>'+
+   '<input type="range" id="limit" min="5000" max="30000" step="1000" value="'+S.limit+'" aria-label="Per-purchase limit">'+
+   '<div class="mrow"><span>'+m(5000)+'</span><span>'+m(30000)+'</span></div>'+
    '<p class="note">Above this, Glance stops and tells you why. You always approve the charge yourself as well.</p>'+
-   '</div><div class="foot"><button class="btn" data-go="home">Save limit</button></div>';
+   (S.last||S.orders.length?'':'<p class="note">Try it: set S$80, then open Quote \u2014 the S$84.46 order is blocked by S$4.46.</p>')+
+   '</div><div class="foot"><button class="btn" data-act="savelimit">Save limit</button></div>';
  }
 };
 
-var screen=document.getElementById('screen'),rail=document.getElementById('rail'),spec=document.getElementById('spec');
-var holdT=null,hold=600;
+// ---------- render ----------
+var screen=document.getElementById('screen'),rail=document.getElementById('rail'),spec=document.getElementById('spec'),narr=document.getElementById('narr'),pbar=document.getElementById('pbar');
+var holdT=null,hold=600,traceTimers=[];
+function clearTrace(){traceTimers.forEach(clearTimeout);traceTimers=[]}
+function ts(ms){var d=new Date(Date.now()+ms);return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+':'+('0'+d.getSeconds()).slice(-2)+'.'+('00'+d.getMilliseconds()).slice(-3)}
+function runTrace(lines){
+  clearTrace();var box=document.getElementById('trace');if(!box)return;box.innerHTML='';
+  lines.forEach(function(l){traceTimers.push(setTimeout(function(){var b=document.getElementById('trace');if(!b)return;var row=document.createElement('div');row.innerHTML='<span class="ts">'+ts(0)+'</span><span class="'+l.c+'">'+esc(l.s)+'</span>';b.appendChild(row);b.scrollTop=b.scrollHeight},l.t))});
+}
 function render(){
   screen.innerHTML=V[S.scr]();
-  rail.innerHTML=SCREENS.map(function(s,i){return (s[0]==='limit'?'<li class="sep" aria-hidden="true"></li>':'')+'<li><button data-go="'+s[0]+'" aria-current="'+(S.scr===s[0])+'"><b>'+(i<6?'0'+(i+1):'··')+'</b>'+s[1]+'</button></li>'}).join('');
-  var d=SPEC[S.scr];
-  spec.innerHTML='<h2>'+d.t+'</h2><p>'+d.see+'</p><h3>Behind this screen</h3><pre>'+esc(d.calls)+'</pre><h3>Build notes</h3><ul>'+d.notes.map(function(n){return '<li>'+n+'</li>'}).join('')+'</ul><button class="reset" data-act="reset">Reset the demo</button>';
+  rail.innerHTML=SCREENS.map(function(s,i){return (s[0]==='limit'?'<li class="sep" aria-hidden="true"></li>':'')+'<li><button data-go="'+s[0]+'" aria-current="'+(S.scr===s[0])+'"><b>'+(i<6?'0'+(i+1):'\u00b7\u00b7')+'</b>'+s[1]+'</button></li>'}).join('');
+  var d=PANEL()[S.scr];
+  spec.innerHTML='<h2>'+d.t+'</h2><p>'+d.see+'</p><h3>Live trace \u00b7 what the backend does</h3><div class="trace" id="trace"></div>'+
+   '<div class="kv"><div><h3>Request</h3><pre>'+esc(d.req)+'</pre></div><div><h3>Response</h3><pre>'+esc(d.res)+'</pre></div></div>'+
+   '<h3>Guarantees on this screen</h3><div class="guar">'+d.guar.map(function(g){return '<div><i>\u2713</i><span>'+g+'</span></div>'}).join('')+'</div>';
+  var nk=S.scr==='quote'&&!dec(total()).allowed?'quoteOver':S.scr;
+  narr.innerHTML='<b>'+NARR[nk][0]+'</b>'+NARR[nk][1];
+  runTrace(d.trace);
   clearInterval(holdT);
   if(S.scr==='quote'&&document.getElementById('hold')){hold=600;holdT=setInterval(function(){var e=document.getElementById('hold');if(!e){clearInterval(holdT);return}hold=Math.max(0,hold-1);e.textContent=Math.floor(hold/60)+':'+('0'+hold%60).slice(-2)},1000)}
 }
-function go(s){if(s!=='quote')S.toast='';S.busy=0;S.scr=s;render()}
+function go(s){if(s!=='quote')S.toast='';S.busy=0;S.approving=0;S.prev=S.scr;S.scr=s;render()}
 
+// ---------- actions ----------
+function send(){S.busy=1;render();var n=1,iv=setInterval(function(){if(S.scr!=='ask'){clearInterval(iv);return}n++;if(n>3){clearInterval(iv);S.pick=0;go('results')}else{S.busy=n;render()}},800)}
+function approve(){S.approving=1;render();setTimeout(function(){if(S.scr!=='approve')return;var p=P[S.pick],t=total(),before=S.vault;S.vault=S.vault-t;S.last={name:p.n,merchant:p.m,amt:t,ref:'ORD-SG-'+(1003+S.orders.length),ship:SHIP[S.ship],before:before,after:S.vault};S.orders.unshift(S.last);S.seq++;go('paid')},1800)}
+function reset(){stopPitch();S=JSON.parse(JSON.stringify(S0));render()}
 document.addEventListener('click',function(e){
-  var b=e.target.closest('[data-go],[data-act]');if(!b||b.disabled)return;
-  if(b.dataset.go){go(b.dataset.go);return}
+  var b=e.target.closest('[data-go],[data-act],[data-src]');if(!b||b.disabled)return;
+  if(b.dataset.src){S.src=b.dataset.src;if(S.src!=='camera')S.photo=false;render();return}
+  if(b.dataset.go){stopPitch();go(b.dataset.go);return}
   var a=b.dataset.act;
-  if(a==='send'){S.busy=1;render();var n=1,iv=setInterval(function(){if(S.scr!=='ask'){clearInterval(iv);return}n++;if(n>3){clearInterval(iv);go('results')}else{S.busy=n;render()}},700)}
-  if(a==='approve'){var p=P[S.pick],t=total();S.vault=Math.round((S.vault-t)*100)/100;S.last={name:p.n,merchant:p.m,amt:t,ref:12345+S.orders.length,ship:SHIP[S.ship],after:S.vault};S.orders.unshift(S.last);go('paid')}
-  if(a==='decline'){S.scr='quote';S.toast='Payment declined. Nothing was charged.';render()}
-  if(a==='reset'){S={scr:'home',limit:150,ship:'std',vault:START,pick:0,orders:[],busy:0,toast:'',last:null};render()}
+  if(a==='send')send();
+  if(a==='photo'){S.photo=true;render()}
+  if(a==='unphoto'){S.photo=false;render()}
+  if(a==='approve')approve();
+  if(a==='decline'){S.scr='quote';S.toast='Payment declined on Reap\u2019s page. Nothing was charged.';render();var tr=document.getElementById('trace');if(tr){var row=document.createElement('div');row.innerHTML='<span class="ts">'+ts(0)+'</span><span class="warn">GET /agentic/checkouts/co_41\u2026  \u2192 CANCELLED \u00b7 nothing charged \u00b7 no order recorded</span>';tr.appendChild(row)}}
+  if(a==='savelimit'){S.toast='';go(S.prev==='quote'?'quote':'home')}
+  if(a==='reset')reset();
+  if(a==='guardrail'){runGuardrail()}
 });
 document.addEventListener('change',function(e){
   if(e.target.name==='pick'){S.pick=+e.target.value}
   if(e.target.name==='ship'){S.ship=e.target.value;S.toast='';render();var f=document.getElementById('ship-'+S.ship);if(f)f.focus()}
 });
 document.addEventListener('input',function(e){
-  if(e.target.id==='limit'){S.limit=+e.target.value;document.getElementById('limval').textContent='$'+S.limit}
+  if(e.target.id==='limit'){S.limit=+e.target.value;document.getElementById('limval').textContent=m(S.limit)}
 });
+
+// ---------- pitch mode: auto-advance with narration ----------
+var pitchT=[],pitching=false,playB=document.getElementById('play');
+function at(ms,fn){pitchT.push(setTimeout(fn,ms))}
+function stopPitch(){pitchT.forEach(clearTimeout);pitchT=[];pitching=false;playB.textContent='\u25b6 Play the pitch (60 s)';pbar.style.width='0'}
+function progress(total){var t0=Date.now();var iv=setInterval(function(){if(!pitching){clearInterval(iv);return}pbar.style.width=Math.min(100,(Date.now()-t0)/total*100)+'%'},250);pitchT.push(iv)}
+function runPitch(){
+  stopPitch();S=JSON.parse(JSON.stringify(S0));pitching=true;playB.textContent='\u23f8 Pause';
+  var steps=[
+   [0,function(){go('home')}],
+   [5000,function(){S.src='camera';go('ask')}],
+   [8000,function(){S.photo=true;render()}],
+   [10500,function(){send()}],
+   [13500,function(){/* results shown by send */}],
+   [18000,function(){go('quote')}],
+   [23500,function(){S.ship='exp';render()}],
+   [26500,function(){S.ship='std';render()}],
+   [28500,function(){go('approve')}],
+   [33500,function(){approve()}],
+   [36000,function(){/* paid */}],
+   [42000,function(){go('home')}],
+   [46000,function(){S.limit=8000;go('limit')}],
+   [49000,function(){go('quote')}],
+   [55000,function(){S.limit=15000;go('limit')}],
+   [58000,function(){go('home')}],
+   [60000,function(){stopPitch();playB.textContent='\u21bb Replay the pitch'}]
+  ];
+  steps.forEach(function(s){at(s[0],s[1])});progress(60000);
+}
+function runGuardrail(){stopPitch();S.limit=8000;S.pick=0;S.ship='std';go('quote')}
+playB.addEventListener('click',function(){if(pitching)stopPitch();else runPitch()});
+document.addEventListener('keydown',function(e){
+  if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT')return;
+  var i=SCREENS.findIndex(function(s){return s[0]===S.scr});
+  if(e.key==='ArrowRight'){stopPitch();go(SCREENS[Math.min(SCREENS.length-1,i+1)][0])}
+  else if(e.key==='ArrowLeft'){stopPitch();go(SCREENS[Math.max(0,i-1)][0])}
+  else if(e.key===' '){e.preventDefault();if(pitching)stopPitch();else runPitch()}
+  else if(e.key==='g'||e.key==='G'){runGuardrail()}
+});
+
+// ---------- deep links for recording: ?scr=quote&limit=8000&ship=exp&pick=0&src=camera&photo=1&play=1 ----------
+var q=new URLSearchParams(location.search);
+if(q.get('limit'))S.limit=+q.get('limit');if(q.get('ship'))S.ship=q.get('ship');if(q.get('pick'))S.pick=+q.get('pick');
+if(q.get('src'))S.src=q.get('src');if(q.get('photo'))S.photo=true;if(q.get('scr'))S.scr=q.get('scr');
 render();
+if(q.has('play'))runPitch();
 })();
 </script>
