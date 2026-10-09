@@ -7,8 +7,12 @@ import { C, s } from './src/theme';
 import Approve from './src/Approve';
 
 type Screen = 'home' | 'ask' | 'results' | 'quote' | 'approve' | 'paid' | 'limit';
-const money = (n: number | null | undefined) => (n == null ? '—' : '$' + n.toFixed(2));
-const usdc = (n: number | null | undefined) => (n == null ? '—' : n.toFixed(2));
+// Integer-cents formatting only; no float arithmetic on money (constitution V).
+const SYMBOL: Record<string, string> = { SGD: 'S$', USD: '$' };
+const cents = (c: number | null | undefined) => (c == null ? '—' : `${Math.trunc(c / 100)}.${String(Math.abs(c) % 100).padStart(2, '0')}`);
+let CUR = 'SGD';
+const money = (c: number | null | undefined) => (c == null ? '—' : (SYMBOL[CUR] ?? CUR + ' ') + cents(c));
+const usdc = cents;
 
 function Btn({ title, onPress, disabled, ghost }: { title: string; onPress: () => void; disabled?: boolean; ghost?: boolean }) {
   return (
@@ -37,8 +41,8 @@ function ErrorBox({ err }: { err: unknown }) {
 export default function App() {
   const [scr, setScr] = useState<Screen>('home');
   const [home, setHome] = useState<Home | null>(null);
-  const [limit, setLimit] = useState(150);
-  const [text, setText] = useState('Buy Sony WH-1000XM5 headphones, under $150');
+  const [limitCents, setLimitCents] = useState(15000);
+  const [text, setText] = useState('Buy an Anker Nano USB-C hub, under S$150');
   const [busy, setBusy] = useState(0);
   const [products, setProducts] = useState<Product[]>([]);
   const [pick, setPick] = useState<string | null>(null);
@@ -55,7 +59,7 @@ export default function App() {
   const product = products.find((p) => p.id === pick);
 
   const loadHome = useCallback(async () => {
-    try { const h = await api.home(); setHome(h); setLimit(h.limit); } catch (e) { setErr(e); }
+    try { const h = await api.home(); CUR = h.currency || CUR; setHome(h); setLimitCents(h.limitCents); } catch (e) { setErr(e); }
   }, []);
   useEffect(() => { if (scr === 'home') loadHome(); }, [scr, loadHome]);
 
@@ -64,7 +68,7 @@ export default function App() {
     try {
       const intent = await api.intent(text);
       setBusy(2);
-      const r = await api.search(intent.query, intent.maxPrice ?? limit);
+      const r = await api.search(intent.query, intent.maxPriceCents ?? limitCents);
       setBusy(3);
       await new Promise((ok) => setTimeout(ok, 500));
       setProducts(r.products); setPick(r.pickId ?? r.products[0]?.id ?? null); setAgentPick(r.pickId);
@@ -88,7 +92,8 @@ export default function App() {
     if (!quote || !product) return;
     setErr(null); setPaying(true);
     try {
-      const c = await api.checkout(quote.quoteId, { name: product.name, merchant: product.merchant, imageUrl: product.imageUrl });
+      const delivery = quote.shippingOptions.find((o) => o.selected)?.name;
+      const c = await api.checkout(quote.quoteId, { name: product.name, merchant: product.merchant, imageUrl: product.imageUrl }, delivery);
       setCheckout({ id: c.checkoutId, url: c.approvalUrl });
       if (c.approvalUrl) go('approve'); else await confirm(c.checkoutId);
     } catch (e) { setErr(e); } finally { setPaying(false); }
@@ -125,11 +130,11 @@ export default function App() {
     body = (<>
       <View style={s.vault}>
         <Text style={[s.k, { color: C.accentInk, opacity: 0.8 }]}>USDC vault{mock ? ' · demo balance' : ''}</Text>
-        <Text style={s.vaultAmt}>{usdc(home?.vaultBalance)}<Text style={{ fontSize: 15 }}> USDC</Text></Text>
+        <Text style={s.vaultAmt}>{usdc(home?.vaultBalanceCents)}<Text style={{ fontSize: 15 }}> USDC</Text></Text>
         <Text style={s.vaultMeta}>{mock ? 'Mock balance (Kwal vault pending)' : 'Test funds on Ink Sepolia'} · backs card •••• {home?.cardLast4 ?? '····'}</Text>
       </View>
       <View style={s.rowc}>
-        <View><Text style={s.strong}>{money(limit)} per purchase</Text><Text style={s.small}>Glance stops above this</Text></View>
+        <View><Text style={s.strong}>{money(limitCents)} per purchase</Text><Text style={s.small}>Glance stops above this</Text></View>
         <Pressable onPress={() => go('limit')}><Text style={s.link}>Change</Text></Pressable>
       </View>
       <Text style={s.k}>Orders</Text>
@@ -139,7 +144,7 @@ export default function App() {
             <Text style={s.strong} numberOfLines={1}>{o.item?.name ?? 'Order'}</Text>
             <Text style={s.small} numberOfLines={1}>Order {o.orderId ?? o.checkoutId} · {o.item?.merchant ?? ''}</Text>
           </View>
-          <Text style={s.strong}>{money(o.finalAmount)}</Text>
+          <Text style={s.strong}>{money(o.finalAmountCents)}</Text>
         </View>
       )) : (
         <View style={s.empty}><Text style={s.note}>No orders yet. Ask Glance to buy something and it shows up here.</Text></View>
@@ -186,7 +191,7 @@ export default function App() {
               <Text style={s.small}>{p.merchant}</Text>
               {p.id === agentPick ? <Text style={s.pill}>Agent's pick</Text> : null}
             </View>
-            <Text style={s.pr}>{money(p.price)}</Text>
+            <Text style={s.pr}>{money(p.priceCents)}</Text>
           </Pressable>
         );
       })}
@@ -200,9 +205,9 @@ export default function App() {
 
   if (scr === 'quote') {
     const q = quote;
-    const over = !!q && q.overLimit;
-    const total = q?.total ?? 0;
-    const pct = q ? Math.min(100, (total / q.limit) * 100) : 0;
+    const over = !!q?.limit && !q.limit.allowed;
+    const total = q?.totalCents ?? 0;
+    const pct = q?.limit ? Math.min(100, Math.round((total * 100) / q.limit.limitCents)) : 0;
     body = (<>
       <Back to="results" label="Results" go={go} />
       {toast ? <View style={s.toast}><Text style={s.toastText}>{toast}</Text></View> : null}
@@ -210,28 +215,28 @@ export default function App() {
       <Text style={s.sub}>{product?.merchant}</Text>
       {!q && quoting && <View style={{ padding: 24 }}><ActivityIndicator color={C.accent} /><Text style={[s.note, { textAlign: 'center', marginTop: 8 }]}>Getting the merchant's live price…</Text></View>}
       {q && (<>
-        {over && <View style={s.alert}><Text style={s.alertText}>{money(q.overBy)} over your limit. Glance will not check out. Pick cheaper shipping or raise the limit.</Text></View>}
+        {over && <View style={s.alert}><Text style={s.alertText}>{money(q.limit?.overByCents)} over your limit. Glance will not check out. Pick cheaper shipping or raise the limit.</Text></View>}
         {q.shippingOptions.length > 0 && <Text style={s.k}>Shipping</Text>}
         {q.shippingOptions.map((o) => (
           <Pressable key={o.id} style={[s.opt, o.selected && s.optOn]} disabled={quoting}
             onPress={() => !o.selected && getQuote(o.id)} accessibilityRole="radio" accessibilityState={{ checked: o.selected }}>
             <Radio on={o.selected} />
             <View style={{ flex: 1 }}><Text style={s.nm}>{o.name}</Text></View>
-            <Text style={s.pr}>{money(o.price)}</Text>
+            <Text style={s.pr}>{money(o.priceCents)}</Text>
           </Pressable>
         ))}
         <View style={s.lines}>
-          <View style={s.line}><Text style={s.lineText}>Item</Text><Text style={s.lineText}>{money(q.subtotal)}</Text></View>
-          <View style={s.line}><Text style={s.lineText}>Shipping</Text><Text style={s.lineText}>{money(q.shipping)}</Text></View>
-          <View style={s.line}><Text style={s.lineText}>Tax</Text><Text style={s.lineText}>{money(q.tax)}</Text></View>
-          {q.discounts ? <View style={s.line}><Text style={s.lineText}>Discounts</Text><Text style={s.lineText}>-{money(q.discounts)}</Text></View> : null}
-          <View style={[s.line, { borderBottomWidth: 0 }]}><Text style={s.lineTotal}>Total</Text><Text style={s.lineTotal}>{money(q.total)}</Text></View>
+          <View style={s.line}><Text style={s.lineText}>Item</Text><Text style={s.lineText}>{money(q.itemCents)}</Text></View>
+          <View style={s.line}><Text style={s.lineText}>Shipping</Text><Text style={s.lineText}>{money(q.shippingCents)}</Text></View>
+          <View style={s.line}><Text style={s.lineText}>Tax</Text><Text style={s.lineText}>{money(q.taxCents)}</Text></View>
+          {q.discountCents ? <View style={s.line}><Text style={s.lineText}>Discounts</Text><Text style={s.lineText}>-{money(q.discountCents)}</Text></View> : null}
+          <View style={[s.line, { borderBottomWidth: 0 }]}><Text style={s.lineTotal}>Total</Text><Text style={s.lineTotal}>{money(q.totalCents)}</Text></View>
         </View>
         <View style={{ gap: 6 }}>
           <View style={s.track}><View style={[s.fill, { width: `${pct}%` }, over && { backgroundColor: C.stop }]} /></View>
           <View style={s.mrow}>
-            <Text style={s.small}>{over ? `${money(q.overBy)} over your limit` : `${money(q.limit - total)} under your limit`}</Text>
-            <Text style={s.small}>Limit {money(q.limit)}</Text>
+            <Text style={s.small}>{over ? `${money(q.limit?.overByCents)} over your limit` : `${money(q.limit?.remainingCents)} under your limit`}</Text>
+            <Text style={s.small}>Limit {money(q.limit?.limitCents)}</Text>
           </View>
         </View>
         {q.expiresAt && !over ? <Text style={s.note}>Price held by the merchant until {new Date(q.expiresAt).toLocaleTimeString()}.</Text> : null}
@@ -239,7 +244,7 @@ export default function App() {
       <ErrorBox err={err} />
     </>);
     foot = (<>
-      <Btn title={paying ? 'Starting checkout…' : `Review and pay ${q ? money(q.total) : ''}`} disabled={!q || over || quoting || paying} onPress={pay} />
+      <Btn title={paying ? 'Starting checkout…' : `Review and pay ${q ? money(q.totalCents) : ''}`} disabled={!q || over || quoting || paying} onPress={pay} />
       {over && <Btn ghost title="Change limit" onPress={() => go('limit')} />}
     </>);
   }
@@ -254,17 +259,19 @@ export default function App() {
   }
 
   if (scr === 'paid' && paid) {
-    const before = paid.vaultBefore ?? home?.vaultBalance ?? null;
-    const after = paid.vaultSource === 'kwal' ? paid.vaultAfter : before != null && paid.finalAmount != null ? before - paid.finalAmount : null;
+    const before = paid.vaultBeforeCents ?? home?.vaultBalanceCents ?? null;
+    const after = paid.vaultSource === 'kwal' ? paid.vaultAfterCents : before != null && paid.finalAmountCents != null ? before - paid.finalAmountCents : null;
+    const mockVault = paid.vaultSource !== 'kwal';
     body = (<>
       <View style={s.doneMark}><Text style={{ color: C.ok, fontSize: 30, fontWeight: '700' }}>✓</Text></View>
-      <Text style={[s.h, { textAlign: 'center' }]}>Paid {money(paid.finalAmount)}</Text>
-      <Text style={[s.sub, { textAlign: 'center' }]}>From your USDC vault</Text>
+      <Text style={[s.h, { textAlign: 'center' }]}>Paid {money(paid.finalAmountCents)}</Text>
+      <Text style={[s.sub, { textAlign: 'center' }]}>Amount actually charged · from your USDC vault</Text>
       <View style={s.lines}>
         <View style={s.line}><Text style={s.lineText}>Order</Text><Text style={s.lineText} numberOfLines={1}>{paid.orderId ?? '—'}</Text></View>
         <View style={s.line}><Text style={s.lineText}>Item</Text><Text style={[s.lineText, { flex: 1, textAlign: 'right', marginLeft: 12 }]} numberOfLines={1}>{product?.name}</Text></View>
         <View style={s.line}><Text style={s.lineText}>Merchant</Text><Text style={s.lineText}>{product?.merchant}</Text></View>
-        <View style={[s.line, { borderBottomWidth: 0 }]}><Text style={s.lineTotal}>Vault balance</Text><Text style={s.lineTotal}>{usdc(after)} USDC</Text></View>
+        {paid.deliveryName ? <View style={s.line}><Text style={s.lineText}>Delivery</Text><Text style={s.lineText}>{paid.deliveryName}</Text></View> : null}
+        <View style={[s.line, { borderBottomWidth: 0 }]}><Text style={s.lineTotal}>Vault balance{mockVault ? ' (mock)' : ''}</Text><Text style={s.lineTotal}>{usdc(after)} USDC</Text></View>
       </View>
       <Text style={s.note}>Sandbox: the checkout is simulated and nothing ships.</Text>
     </>);
@@ -276,15 +283,15 @@ export default function App() {
       <Back to="home" label="Home" go={go} />
       <Text style={s.h}>Spending limit</Text>
       <Text style={s.sub}>The most Glance can spend on one purchase, shipping and tax included.</Text>
-      <Text style={s.bigval}>${limit}</Text>
-      <Slider minimumValue={50} maximumValue={300} step={10} value={limit} onValueChange={setLimit}
-        minimumTrackTintColor={C.accent} maximumTrackTintColor={C.line} thumbTintColor={C.accent} accessibilityLabel="Per-purchase limit in dollars" />
-      <View style={s.mrow}><Text style={s.small}>$50</Text><Text style={s.small}>$300</Text></View>
+      <Text style={s.bigval}>{money(limitCents)}</Text>
+      <Slider minimumValue={5000} maximumValue={30000} step={1000} value={limitCents} onValueChange={(v) => setLimitCents(Math.round(v))}
+        minimumTrackTintColor={C.accent} maximumTrackTintColor={C.line} thumbTintColor={C.accent} accessibilityLabel="Per-purchase limit" />
+      <View style={s.mrow}><Text style={s.small}>{money(5000)}</Text><Text style={s.small}>{money(30000)}</Text></View>
       <Text style={s.note}>Above this, Glance stops and tells you why. You always approve the charge yourself as well.</Text>
       <ErrorBox err={err} />
     </>);
     foot = <Btn title="Save limit" onPress={async () => {
-      try { await api.setLimit(limit); setQuote(null); go(quote ? 'quote' : 'home'); } catch (e) { setErr(e); }
+      try { await api.setLimit(limitCents); setQuote(null); go(quote ? 'quote' : 'home'); } catch (e) { setErr(e); }
     }} />;
   }
 

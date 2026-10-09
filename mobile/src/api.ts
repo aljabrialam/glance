@@ -2,7 +2,12 @@ export const API_URL = (process.env.EXPO_PUBLIC_API_URL || 'http://localhost:800
 
 export class ApiError extends Error {
   constructor(public status: number, public body: any) {
-    super(typeof body?.detail === 'string' ? body.detail : body?.error === 'reap' ? `Reap ${body.status}: ${JSON.stringify(body.response)}` : `HTTP ${status}`);
+    super(
+      typeof body?.detail === 'string' ? body.detail
+        : typeof body?.detail?.message === 'string' ? body.detail.message
+        : body?.error === 'reap' ? `Reap ${body.status}: ${JSON.stringify(body.response)}`
+        : `HTTP ${status}`,
+    );
   }
 }
 
@@ -17,32 +22,44 @@ async function req<T>(method: string, path: string, body?: unknown): Promise<T> 
   return data as T;
 }
 
+// All money is integer cents in one currency per session (constitution V).
+export type Cents = number;
+
+export type LimitDecision = {
+  limitCents: Cents; totalCents: Cents; allowed: boolean; overByCents: Cents; remainingCents: Cents;
+};
 export type Product = {
-  id: string; name: string; merchant?: string; imageUrl?: string; price: number | null;
-  variantId?: string; requiresShipping?: boolean;
+  id: string; name: string; merchant?: string; imageUrl?: string; priceCents: Cents | null;
+  variantId?: string; requiresShipping?: boolean; rank?: number;
 };
-export type ShippingOption = { id: string; name: string; price: number | null; selected: boolean };
+export type ShippingOption = { id: string; name: string; priceCents: Cents | null; selected: boolean };
 export type Quote = {
-  quoteId: string; shippingOptions: ShippingOption[]; subtotal: number | null; shipping: number | null;
-  tax: number | null; discounts: number; total: number | null; currency: string; expiresAt?: string;
-  limit: number; overLimit: boolean; overBy: number;
+  quoteId: string; shippingOptions: ShippingOption[]; itemCents: Cents | null; shippingCents: Cents | null;
+  taxCents: Cents | null; discountCents: Cents; totalCents: Cents | null; currency: string; expiresAt?: string;
+  limit: LimitDecision | null;
 };
-export type Order = { checkoutId: string; orderId?: string; finalAmount: number | null; item?: { name?: string; merchant?: string } | null; at: number };
-export type Home = { vaultBalance: number | null; vaultSource: string; cardLast4: string; limit: number; orders: Order[]; enrollmentId?: string };
+export type Order = {
+  checkoutId: string; orderId?: string; finalAmountCents: Cents | null;
+  item?: { name?: string; merchant?: string } | null; deliveryName?: string | null; at: number;
+};
+export type Home = {
+  vaultBalanceCents: Cents | null; vaultSource: 'kwal' | 'mock'; cardLast4: string | null; currency: string;
+  limitCents: Cents; orders: Order[]; enrollmentActive: boolean;
+};
 export type CheckoutStatus = {
-  status: string; terminal: boolean; orderId?: string; finalAmount: number | null;
-  vaultBefore?: number | null; vaultAfter?: number | null; vaultSource?: string;
+  status: string; terminal: boolean; orderId?: string; finalAmountCents: Cents | null; currency: string;
+  deliveryName?: string | null; vaultBeforeCents?: Cents | null; vaultAfterCents?: Cents | null; vaultSource?: string;
 };
 
 export const api = {
   home: () => req<Home>('GET', '/api/home'),
-  setLimit: (perPurchase: number) => req<{ limit: number }>('PUT', '/api/limit', { perPurchase }),
-  intent: (text: string) => req<{ query: string; maxPrice: number | null }>('POST', '/api/intent', { text }),
-  search: (query: string, maxPrice: number | null) =>
-    req<{ products: Product[]; pickId: string | null }>('POST', '/api/search', { query, maxPrice }),
+  setLimit: (perPurchaseCents: Cents) => req<{ limitCents: Cents }>('PUT', '/api/limit', { perPurchaseCents }),
+  intent: (text: string) => req<{ query: string; maxPriceCents: Cents | null }>('POST', '/api/intent', { text }),
+  search: (query: string, maxPriceCents: Cents | null) =>
+    req<{ products: Product[]; pickId: string | null; currency: string }>('POST', '/api/search', { query, maxPriceCents }),
   quote: (b: { variantId?: string; quoteId?: string; shippingOptionId?: string; requiresShipping?: boolean }) =>
     req<Quote>('POST', '/api/quote', b),
-  checkout: (quoteId: string, item: { name?: string; merchant?: string; imageUrl?: string }) =>
-    req<{ checkoutId: string; status: string; approvalUrl: string | null }>('POST', '/api/checkout', { quoteId, item }),
+  checkout: (quoteId: string, item: { name?: string; merchant?: string; imageUrl?: string }, deliveryName?: string) =>
+    req<{ checkoutId: string; status: string; approvalUrl: string | null }>('POST', '/api/checkout', { quoteId, item, deliveryName }),
   checkoutStatus: (id: string) => req<CheckoutStatus>('GET', `/api/checkout/${id}`),
 };
