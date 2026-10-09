@@ -1,13 +1,13 @@
 [tool.poetry]
-name = "glance-backend"
+name = "app"
 version = "0.1.0"
 description = "Glance backend"
-authors = ["Glance"]
+authors = ["Glance <glance@example.com>"]
+packages = [{ include = "app" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = ">=0.110"
-uvicorn = ">=0.29"
+fastapi = { extras = ["standard"], version = "^0.115.0" }
 httpx = ">=0.27"
 
 [build-system]
