@@ -141,6 +141,7 @@ pre{margin:0;background:var(--code-bg);color:var(--code-fg);border-radius:10px;p
 .trace .ok{color:#7BE3B0}.trace .rule{color:#A9B8FF}.trace .warn{color:#FFC46B}.trace .bad{color:#FF8C82}.trace .dim{color:#9AA6BC}
 .kv{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media (max-width:1240px){.kv{grid-template-columns:1fr}}
+.kv>div{min-width:0}
 .kv pre{font-size:12px;max-height:300px;overflow:auto}
 .guar{display:flex;flex-direction:column;gap:6px;max-width:62ch}
 .guar div{display:flex;gap:8px;font-size:14px;align-items:flex-start}
@@ -188,7 +189,7 @@ pre{margin:0;background:var(--code-bg);color:var(--code-fg);border-radius:10px;p
   </div>
 
   <div class="tools">
-    <button class="tb primary" id="play">▶ Play the pitch (60 s)</button>
+    <button class="tb primary" id="play">▶ Play the pitch (62 s)</button>
     <button class="tb" data-act="guardrail">Show the guardrail</button>
     <button class="tb" data-act="reset">Reset</button>
     <span class="kbd">Keys: ← → screens · space play/pause · G guardrail</span>
@@ -422,30 +423,28 @@ document.addEventListener('input',function(e){
 // ---------- pitch mode: auto-advance with narration ----------
 var pitchT=[],pitching=false,playB=document.getElementById('play');
 function at(ms,fn){pitchT.push(setTimeout(fn,ms))}
-function stopPitch(){pitchT.forEach(clearTimeout);pitchT=[];pitching=false;playB.textContent='\u25b6 Play the pitch (60 s)';pbar.style.width='0'}
+function stopPitch(){pitchT.forEach(clearTimeout);pitchT=[];pitching=false;playB.textContent='\u25b6 Play the pitch (62 s)';pbar.style.width='0'}
 function progress(total){var t0=Date.now();var iv=setInterval(function(){if(!pitching){clearInterval(iv);return}pbar.style.width=Math.min(100,(Date.now()-t0)/total*100)+'%'},250);pitchT.push(iv)}
 function runPitch(){
   stopPitch();S=JSON.parse(JSON.stringify(S0));pitching=true;playB.textContent='\u23f8 Pause';
   var steps=[
-   [0,function(){go('home')}],
-   [5000,function(){S.src='camera';go('ask')}],
-   [8000,function(){S.photo=true;render()}],
-   [10500,function(){send()}],
-   [13500,function(){/* results shown by send */}],
-   [18000,function(){go('quote')}],
-   [23500,function(){S.ship='exp';render()}],
-   [26500,function(){S.ship='std';render()}],
-   [28500,function(){go('approve')}],
-   [33500,function(){approve()}],
-   [36000,function(){/* paid */}],
-   [42000,function(){go('home')}],
-   [46000,function(){S.limit=8000;go('limit')}],
-   [49000,function(){go('quote')}],
-   [55000,function(){S.limit=15000;go('limit')}],
-   [58000,function(){go('home')}],
-   [60000,function(){stopPitch();playB.textContent='\u21bb Replay the pitch'}]
+   [0,function(){go('home')}],                                   // 0:00 Start here
+   [5000,function(){S.src='glasses';go('ask')}],                 // 0:05 Meta Display glasses (concept)
+   [10000,function(){S.src='camera';S.photo=true;render()}],     // 0:10 Phone camera (built)
+   [13000,function(){send()}],                                   // 0:13 intent -> search -> results (~0:16)
+   [20000,function(){go('quote')}],                              // 0:20 quote vs limit
+   [25000,function(){S.ship='exp';render()}],                    // 0:25 re-price: express
+   [27500,function(){S.ship='std';render()}],                    // 0:27 back to standard
+   [29500,function(){go('approve')}],                            // 0:29 Reap hosted approval page
+   [34500,function(){approve()}],                                // 0:34 approve -> paid (~0:36)
+   [42500,function(){go('home')}],                               // 0:42 home with the order
+   [46000,function(){S.limit=8000;go('limit')}],                 // 0:46 limit to S$80
+   [49000,function(){go('quote')}],                              // 0:49 blocked quote
+   [55000,function(){S.limit=15000;go('limit')}],                // 0:55 limit back
+   [58000,function(){go('home')}],                               // 0:58 end on home
+   [62000,function(){stopPitch();playB.textContent='\u21bb Replay the pitch'}]
   ];
-  steps.forEach(function(s){at(s[0],s[1])});progress(60000);
+  steps.forEach(function(s){at(s[0],s[1])});progress(62000);
 }
 function runGuardrail(){stopPitch();S.limit=8000;S.pick=0;S.ship='std';go('quote')}
 playB.addEventListener('click',function(){if(pitching)stopPitch();else runPitch()});
