@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "glance-backend"
+version = "0.1.0"
+description = "Glance backend"
+authors = ["Glance"]
+packages = [{ include = "app" }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = ">=0.110"
+uvicorn = { version = ">=0.29", extras = ["standard"] }
+httpx = ">=0.27"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
