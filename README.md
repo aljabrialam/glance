@@ -1,8 +1,17 @@
 # Glance
 
-**Point your phone (or your glasses) at a product, say "under S$150", and an AI agent finds it, prices it in full, checks it against your spending limit, and pays with a card backed by your USDC vault — but never without you approving the charge yourself.**
+**Look at a product through Meta Display glasses, or scan it with your phone camera, say "under S$150" — and an AI agent finds it, prices it in full, checks it against your spending limit, and pays through the Reap Agentic API with a card backed by your Kwal USDC vault. Never without you approving the charge yourself.**
 
-Glance turns one sentence or one photo into a priced, limit-checked purchase through Reap's Agentic Payments API. A pure, unit-tested limit rule — not the model — decides whether a checkout may even be opened. The user approves every charge on Reap's own hosted page; the agent never sees a card number.
+Glance turns one glance, one photo, or one sentence into a priced, limit-checked purchase. A pure, unit-tested limit rule — not the model — decides whether a checkout may even be opened. The user approves every charge on Reap's own hosted page; the agent never sees a card number.
+
+## What Glance uses
+
+| | Role | Tonight |
+|---|---|---|
+| **Meta Display glasses** | Hands-free input: look at the product, say the limit, see the agent's progress and the price-vs-limit check as a HUD. Approval always happens on the phone | Concept — shown in the [product film](design/glance-product-film.html); no third-party HUD SDK yet |
+| **Phone camera** | Scan the product with the Glance app; a vision model identifies brand and model from the photo. Or just type one sentence | Built — `expo-image-picker` → `POST /api/intent` with the image |
+| **Reap Agentic API** | The purchase: `products/search` → `products/details` → `quotes` (+ shipping option) → `checkouts` → hosted approval page → order reference and final amount | Built — live against the Reap sandbox, Singapore / SGD |
+| **Kwal (Payward) USDC vault** | The money: stablecoins in a wallet the user owns back the card that pays the merchant. The app shows the vault balance before and after each purchase | Built behind a flag — `backend/app/vault.py` reads the balance via Kwal's `pws_client` when `KWAL_SCRIPTS` + credentials are configured; otherwise a mock labelled as such |
 
 Built in one evening at the **Reap × 65labs Agentic Buildathon**, Singapore, 9 October 2026. Sandbox only: nothing is really bought or shipped.
 
@@ -16,7 +25,8 @@ Built in one evening at the **Reap × 65labs Agentic Buildathon**, Singapore, 9 
 |---|---|
 | **What it is** | A mobile app where an agent shops for you inside a hard spending limit, and you approve every charge |
 | **Problem solved** | "Agentic commerce" demos either let the model spend freely or make the human re-do the whole checkout. Glance keeps the agent useful (search, price, compare, pre-check) and the human in control (one approval tap on the provider's page), with a limit that is enforced in code before any checkout exists |
-| **Two ways to see** | **Phone camera** — built: a photo goes to a vision model that identifies the product. **Meta Display glasses** — concept film only; same agent, same rules, approval still on the phone |
+| **Two ways to see** | **Meta Display glasses** — hands-free, concept film; same agent, same rules, approval still on the phone. **Phone camera** — built: a photo goes to a vision model that identifies the product |
+| **Two APIs** | **Reap Agentic API** for search, quotes, checkout and the hosted approval page. **Kwal** for the USDC vault that backs the card |
 | **Track** | Best Bridge Between Onchain and Real World — stablecoins in a Kwal (Payward) vault back a card payment at a real merchant catalogue |
 | **Core rule** | *Limit before checkout.* `limits.evaluate(total_cents, limit_cents)` is a pure function over whole cents, inclusive at the limit, with 8 unit tests. If it says blocked, no Reap checkout is created and the user is told by exactly how much |
 | **Honest amounts** | Money is integer cents end to end; floats are never used. The Paid screen shows the amount Reap actually charged, never the quote |
