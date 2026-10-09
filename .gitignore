@@ -1,12 +1,14 @@
 .env
 .env.*
+*.env
 !.env.example
 __pycache__/
 .venv/
 node_modules/
-credentials.json
 .expo/
 dist/
+web-build/
+credentials.json
 *.jks
 *.p8
 *.p12
